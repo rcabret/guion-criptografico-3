@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "crypto-js": "^4.0.0",
     "css-loader": "^2.1.0",
     "style-loader": "^0.23.1"
   }
