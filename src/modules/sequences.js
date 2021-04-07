@@ -7,18 +7,22 @@ import {
 	getPositionInMatrix,
 	LinearToVector,
 	vectorToLinear,
-	randomNumber,
+	getCharsMap, randomNumber,
 } from './utils.js';
+import {rowLength, text2} from "./constants";
 
 const loadingString = ['—', '/', '|', '\\',];
 
 /** Element mutations **/
-export const startASCIILoader = (ele, loopCount, time, onEndCallback) => {
+export const startASCIILoader = (ele, loopCount = 4, time, onEndCallback) => {
 	let i = 1;
 	let counter = 0;
 	const interval = setInterval(() => {
 		counter++;
 		//e.target.innerText = string.charAt(Math.floor(Math.random() * string.length));
+		if (ele === undefined) {
+			return;
+		}
 		ele.innerText = loadingString[i];
 		i = getIndex(i, loadingString.length);
 		if (counter > loopCount) {
@@ -87,6 +91,14 @@ export const expandRing = (ele, startingPoint, loopCount, speed) => {
 	}, speed)
 };
 
+/**
+ * Moves in straight line in a certain direction
+ *
+ * @param ele
+ * @param loopCount
+ * @param callback
+ * @param onEndCallback
+ */
 export const moveSequence = (ele, loopCount, callback, onEndCallback) => {
 	let count = 0;
 	// random direction
@@ -107,27 +119,47 @@ export const moveSequence = (ele, loopCount, callback, onEndCallback) => {
 	}, 50);
 }
 
-export const newMove = (ele, trajectory, loopCount, callback, onEndCallback) => {
+export const trajectoryMove = (
+	ele,
+	trajectory,
+	loopCount,
+	callback,
+	onEndCallback,
+	time = 10
+) => {
 	const numPos = getPositionInMatrix(ele);
 	let count = 0;
 	let vector = LinearToVector(numPos);
-	let interval = setInterval(() => {
+	let mathPre;
+
+	// So ghetto
+	if (trajectory) {
+		mathPre = trajectory
+	} else {
+		do {
+			mathPre = Math.round(randomNumber(-1, 2));
+		} while (mathPre === 0)
+	}
+	// ghetto
+
+	const interval = setInterval(() => {
 		const id = vectorToLinear(vector);
 		const el = document.getElementById(`id_${id}`);
 		if (el && callback) {
 			callback(el, count);
 		}
-		const y = vector[1] - Math.round(Math.random());
-		const x = vector[0] - Math.floor(count * 0.25);
+		const x = vector[0] - (mathPre * Math.floor(count * 0.25));
+		const y = vector[1] - (mathPre * Math.round(Math.random()));
 		vector = [x, y];
 		count++;
+
 		if (count > loopCount) {
 			clearInterval(interval);
 			if (onEndCallback) {
-				onEndCallback(el);
+				onEndCallback(el, count);
 			}
 		}
-	}, 50);
+	}, time);
 }
 
 let c = 0;
@@ -190,6 +222,44 @@ export const glitch = (querySelector) => {
 		}, Math.random() * i * 0.1)
 	})
 };
+
+/**
+ * Traverses the screen uses random bezier paths
+ *
+ * @param ele
+ */
+const shimmerSequence = (ele) => {
+	const charsArr = getCharsMap(text2, 700);
+	const loopCount = rowLength;
+	const pos = getPositionInMatrix(ele);
+	let v = LinearToVector(pos);
+	let count = 0;
+	let int = setInterval(() => {
+		const cp = vectorToLinear(v);
+		const el = getElementViaPosition(cp);
+		const len = Math.floor(Math.random() * 20);
+		trajectoryMove(el, null, len, (e) => {
+			e.style.color = 'white';
+			startASCIILoader(e, 8, 10, elj => {
+				elj.style.color = 'violet';
+				elj.innerHTML = '-';
+				setTimeout(() => {
+					startASCIILoader(elj, 4, 50, ey => {
+						ey.style.color = 'blue';
+						const pos = getPositionInMatrix(ey);
+						const t = charsArr['id_' + pos] ? charsArr['id_' + pos] : '';
+						ey.innerHTML = t;
+					})
+				}, 1500);
+			})
+		});
+		v[0] = v[0] + 1;
+		count++;
+		if (count > loopCount) {
+			clearInterval(int);
+		}
+	}, 100);
+}
 
 export const deleteEverythingButMe = (ele, querySelector) => {
 	const all = document.querySelectorAll(querySelector);

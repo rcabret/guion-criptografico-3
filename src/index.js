@@ -1,51 +1,79 @@
 import 'assets/main.css';
 
 import {
-    startASCIILoader,
-    moveSequence,
-    newMove,
-} from './modules/sequences.js';
-import {
-    getCharsMap,
-    getElementViaPosition,
-    getPositionInMatrix,
-    getRing,
-    LinearToVector,
-    vectorToLinear,
-    randomNumber,
+	getElementViaPosition,
+	randomNumber,
 } from "./modules/utils";
 import {
-    borderColor,
-    borderWidth,
-    cellWidth,
-    cellHeight,
-    setRowLength,
-    setNumRows,
-    getNumRows,
-    getRowLength,
-    text1,
-    text2,
+	borderColor,
+	borderWidth,
+	cellWidth,
+	cellHeight,
+	rowLength,
+	numOfRows,
 } from "./modules/constants.js";
 
-import sha256 from 'crypto-js/sha256';
-import aes from 'crypto-js/aes';
-import hmacSHA512 from 'crypto-js/hmac-sha512';
-import Base64 from 'crypto-js/enc-base64';
+import AES from 'crypto-js/aes';
+import Sha256 from 'crypto-js/sha256';
+
+import {
+	trajectoryMove,
+	startASCIILoader,
+} from "./modules/sequences";
+
+import * as chroma from 'chroma-js';
 
 // Matrix selector
 const cellSelector = 'cell';
 let numberOfCellsNeeded;
-let ego;
 
 
 // Updates dimension number of cells on window resize
 let activeResizing;
 window.addEventListener('resize', () => {
-    clearTimeout(activeResizing);
-    activeResizing = setTimeout(() => {
-        //runProgram();
-    }, 100);
+	clearTimeout(activeResizing);
+	activeResizing = setTimeout(() => {
+		//runProgram();
+	}, 100);
 });
+
+let typedString = '';
+const printCharToMatrix = (letter, string, index) => {
+	const currentIndex = index !== undefined ? index : string.length - 1;
+	document.getElementById(`id_${currentIndex}`).innerHTML = letter;
+}
+
+const runEncryptionSequence = () => {
+	if (typedString.length) {
+		const password = Sha256('temp_password');
+		const encrypted = AES.encrypt(typedString, password.toString());
+		let directionMap = [];
+		const encryptionArray = encrypted.toString().split('');
+
+		for (let i = 0; i < encryptionArray.length; i++) {
+			if (i + 1 < encryptionArray.length) {
+				const a = encryptionArray[i].charCodeAt(0);
+				const b = encryptionArray[i + 1].charCodeAt(0);
+				const calculatedValue = a - b;
+				directionMap.push(calculatedValue);
+			}
+		}
+
+		encryptSeq2('a', null, null, directionMap);
+
+		//runChipherText(encrypted.toString());
+		//encryptSeq2(encrypted[0]);
+		/*let ASCII = [];
+		encrypted.toString().split('').forEach((letter, i) => {
+			const el = getElementViaPosition(letter.charCodeAt(0));
+			el.style.background = 'blue';
+		});
+
+		console.log(ASCII);
+		const decrypted = AES.decrypt(encrypted, 'password');
+		console.log(encrypted.toString(), 'dec', decrypted.toString(), 'hash-dec', decrypted.toString(encUtf8));*/
+	}
+}
 
 /**
  * Init sequence
@@ -53,156 +81,79 @@ window.addEventListener('resize', () => {
  * @return {void}
  */
 const runProgram = () => {
-    const parent = document.querySelector('#content');
-    parent.innerHTML = '';  // Clear container
-    setRowLength(Math.floor(window.innerWidth / (cellWidth + borderWidth * 2)));
-    setNumRows(Math.floor(window.innerHeight / (cellHeight + borderWidth * 2)));
-    numberOfCellsNeeded = Math.floor(getRowLength() * getNumRows());
+	const parent = document.querySelector('#content');
+	parent.innerHTML = '';  // Clear container
+	numberOfCellsNeeded = Math.floor(rowLength * numOfRows);
 
-    for (let i = 0; i < numberOfCellsNeeded; i++) {
-        const node = document.createElement('div');
-        node.className = cellSelector;
-        node.id = `id_${i}`;
-        node.style.width = `${cellWidth}px`;
-        node.style.height = `${cellHeight}px`;
-        if (borderWidth > 0) {
-            node.style.border = `${borderWidth}px solid ${borderColor}`;
-        }
-        node.innerHTML = '&nbsp;';
-        //node.innerHTML = i;
-        parent.append(node);
-
-        /**
-         *  Append event listeners to each cell,
-         *  This could also be achieved with one global eventListener
-         *  For this example we'll attach them to each node.
-         */
-        //node.addEventListener('mouseover', handleMouseOver);
-        //node.addEventListener('mouseleave', handleMouseLeave);
-        //node.addEventListener('click', handleClick);
-    }
-
-    window.addEventListener('click', handleClick);
-
+	for (let i = 0; i < numberOfCellsNeeded; i++) {
+		const node = document.createElement('div');
+		node.className = cellSelector;
+		node.id = `id_${i}`;
+		node.style.width = `${cellWidth}px`;
+		node.style.height = `${cellHeight}px`;
+		if (borderWidth > 0) {
+			node.style.border = `${borderWidth}px solid ${borderColor}`;
+		}
+		node.innerHTML = '&nbsp;';
+		parent.append(node);
+	}
 };
 
-/**
- * On hover
- * @param e
- */
-let lock = false;
-const handleMouseOver = (e) => {
-    if (e && e.target) {
-        e.target.innerText = 'YO';
-        const loopCount = 5;
-        if (isCloseToEgo(e.target)) {
-            const callback = (ele, count) => {
-                startASCIILoader(ele, 3, 100, ele => {
-                    if (count === loopCount) {
-                        ego = ele;
-                        ego.innerText = 'TU';
-                    } else {
-                        ele.innerText = ' ';
-                    }
-                })
-            };
-            if (lock) {
-                return;
-            }
-            lock = true;
-            moveSequence(ego, loopCount, callback, (el) => {
-                setTimeout(() => {
-                    lock = false;
-                }, 300);
-            });
-        }
-    }
-};
+const scale = chroma.scale();
 
-/**
- * On leave
- * @param e
- */
-const handleMouseLeave = (e) => {
-    if (e && e.target) {
-        e.target.innerText = '';
-    }
-};
+const encryptSeq2 = (cipherChar, element, tracker = 0, codecArray) => {
 
-/**
- * On clickz
- * @param e
- */
-const handleClick = (e) => {
-    const callback = (e) => {
-        //e.style.background = 'blue';
-        e.classList.add('grow');
-        e.style.borderColor = 'blue'
-        e.style.transform = `translate(${randomNumber(-100, 100)}px, ${randomNumber(-100, 100)}px)`
-        setTimeout(() => {
-            //e.classList.remove('grow')
-        }, 550);
-    }
-    //setInterval(() => {
-    newMove(e.target, null, 200, callback);
-    //}, 200);
+	const initialElement = !element
+		? getElementViaPosition(Math.floor(randomNumber(0, numberOfCellsNeeded)))
+		: element;
 
-};
+	// Get direction of crawl based on codecArray differential value.
+	const direction = codecArray[tracker] > 0 ? 1 : -1;
 
-const isCloseToEgo = (ele) => {
-    if (ego !== undefined) {
-        const perimeter = getRing(ego, 2);
-        const currentPosition = getPositionInMatrix(ele);
-        return perimeter.includes(currentPosition);
-    }
-}
-
-const drawComposition = (ele) => {
-    const charsArr = getCharsMap(text2, 700);
-    const loopCount = getRowLength();
-    const pos = getPositionInMatrix(ele);
-    let v = LinearToVector(pos);
-    let count = 0;
-    let int = setInterval(() => {
-        const cp = vectorToLinear(v);
-        const el = getElementViaPosition(cp);
-        const len = Math.floor(Math.random() * 20);
-        newMove(el, null, len, (e) => {
-            e.style.color = 'white';
-            startASCIILoader(e, 8, 10, elj => {
-                elj.style.color = 'violet';
-                elj.innerHTML = '-';
-                setTimeout(() => {
-                    startASCIILoader(elj, 4, 50, ey => {
-                        ey.style.color = 'blue';
-                        const pos = getPositionInMatrix(ey);
-                        const t = charsArr['id_' + pos] ? charsArr['id_' + pos] : '';
-                        ey.innerHTML = t;
-                    })
-                }, 1500);
-            })
-        });
-        v[0] = v[0] + 1;
-        count++;
-        if (count > loopCount) {
-            clearInterval(int);
-        }
-    }, 100);
+	trajectoryMove(initialElement, direction, 15,
+		(e) => {
+			if (e.hasAttribute('hello')) {
+				let visited = parseFloat(e.getAttribute('hello'));
+				let newScale = visited + 0.02;
+				e.setAttribute('hello', newScale);
+			} else {
+				e.setAttribute('hello', 0);
+				e.classList.add('grow');
+			}
+		},
+		(el) => {
+			if (codecArray[tracker + 1]) {
+				encryptSeq2('a', el, tracker + 1, codecArray);
+			}
+		}, 30
+	);
 }
 
 const main = async () => {
-    const div = document.createElement('div');
-    div.id = 'content';
-    document.querySelector('body').appendChild(div);
-    document.addEventListener('DOMContentLoaded', () => {
-        runProgram();
-        console.log(sha256("Message"));
-        const encrypted = aes.encrypt("Mi mensaje esta cifrado cabron", "myPassword").toString();
-        const decrypted = aes.decrypt(encrypted, "myPassword").toString();
-        console.log('enc', encrypted);
-        console.log('dec', decrypted);
+	const div = document.createElement('div');
+	const backdrop = document.createElement('div');
+	div.id = 'content';
+	backdrop.id = 'backdrop';
+	document.querySelector('body').appendChild(div);
+	document.querySelector('body').appendChild(backdrop);
+	document.addEventListener('DOMContentLoaded', () => {
 
-    });
+		runProgram();
+
+		window.addEventListener('keydown', (e) => {
+			if (e.code === 'Space' && e.target === document.body) {
+				e.preventDefault();
+			}
+			if (e.code === 'Enter') {
+				runEncryptionSequence();
+				return;
+			}
+			if (e.code.indexOf('Key') > -1 || e.code === 'Space') {
+				typedString += e.key;
+				printCharToMatrix(e.key, typedString);
+			}
+		});
+	});
 }
 
 main().then(() => console.log('Started'));

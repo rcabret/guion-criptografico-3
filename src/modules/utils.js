@@ -8,7 +8,7 @@
  *s
  * TODO: Will accept a 'neighborStepCallback,  change callback to 'onEndCallback'
  */
-import {getRowLength} from "./constants.js";
+import {rowLength} from "./constants.js";
 
 export const getNeighborsByStep = (
 	ele,
@@ -18,7 +18,6 @@ export const getNeighborsByStep = (
 	onEndCallback) => {
 
 	const cp = getPositionInMatrix(ele);
-	const rowLength = getRowLength();
 	const arr = [
 		cp - (rowLength * step), //top-center
 		cp - (rowLength * step) + step, //top-right
@@ -49,7 +48,6 @@ export const getNeighborsByStep = (
 
 export const move = (ele, direction = 5, step = 1) => {
 	const cp = getPositionInMatrix(ele);
-	const rowLength = getRowLength();
 	switch (direction) {
 		case 1:  // up
 			return cp - (rowLength * step);
@@ -78,7 +76,6 @@ export const move = (ele, direction = 5, step = 1) => {
  */
 export const getRing = (ele, radius) => {
 	const cp = getPositionInMatrix(ele);
-	const rowLength = getRowLength();
 	const equations = [
 		rowLength,
 		-1,
@@ -134,13 +131,12 @@ export const checkForNeighbors = (cp, clickHistoryArray) => {
  * @returns {*}
  */
 export const vectorToLinear = (a) => {
-	return (a[1] * getRowLength()) + a[0];
+	return (a[1] * rowLength) + a[0];
 };
 
 export const LinearToVector = (pos) => {
-	const rowL = getRowLength();
-	const y = Math.floor(pos / rowL);
-	const x = pos < rowL ? pos : Math.floor(pos - (rowL * y));
+	const y = Math.floor(pos / rowLength);
+	const x = pos < rowLength ? pos : Math.floor(pos - (rowLength * y));
 	return [x, y];
 };
 
@@ -175,4 +171,19 @@ export const getCharsMap = (str, start) => {
 
 export const randomNumber = (min, max) => {
 	return Math.random() * (max - min) + min;
+}
+
+/**
+ * Checks if ele is at a certain perimeter from secondEle
+ *
+ * @param ele
+ * @param secondEle
+ * @returns {boolean}
+ */
+export const areClose = (ele, secondEle) => {
+	if (secondEle !== undefined) {
+		const perimeter = getRing(secondEle, 2);
+		const currentPosition = getPositionInMatrix(ele);
+		return perimeter.includes(currentPosition);
+	}
 }
