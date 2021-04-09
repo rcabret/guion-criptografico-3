@@ -23,7 +23,8 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-        hash: true
+        hash: true,
+        title: 'Cabret guión'
     })
   ],
   resolve: {
