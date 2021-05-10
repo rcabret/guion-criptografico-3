@@ -1,26 +1,21 @@
 import "assets/main.css";
 
-import { getElementViaPosition, randomNumber } from "./modules/utils";
+import {
+  getElementViaPosition,
+  randomNumber,
+  buildAndGetDispatchingArray,
+} from "./modules/utils";
 
 import {
-  borderColor,
-  borderWidth,
-  cellWidth,
-  cellHeight,
-  rowLength,
-  numOfRows,
+  MatrixCanvas,
 } from "./modules/constants.js";
 
 import AES from "crypto-js/aes";
 import Sha256 from "crypto-js/sha256";
 
-import { trajectoryMove, startASCIILoader } from "./modules/sequences";
+import {trajectoryMove, startASCIILoader, createRandomLandscape, startASCIIExplosion} from "./modules/sequences";
 
 import * as chroma from "chroma-js";
-
-// Matrix selector
-const cellSelector = "cell";
-let numberOfCellsNeeded;
 
 // Updates dimension number of cells on window resize
 let activeResizing;
@@ -39,33 +34,13 @@ const printCharToMatrix = (letter, string, index) => {
 
 const runEncryptionSequence = () => {
   if (typedString.length) {
-    const password = Sha256("temp_password");
-    const encrypted = AES.encrypt(typedString, password.toString());
-    let directionMap = [];
-    const encryptionArray = encrypted.toString().split("");
+    const passPhrase = Sha256("temp_passphrase");
+    const encrypted = AES.encrypt(typedString, passPhrase.toString());
+    const codecArray = buildAndGetDispatchingArray(encrypted.toString());
 
-    for (let i = 0; i < encryptionArray.length; i++) {
-      if (i + 1 < encryptionArray.length) {
-        const a = encryptionArray[i].charCodeAt(0);
-        const b = encryptionArray[i + 1].charCodeAt(0);
-        const calculatedValue = a - b;
-        directionMap.push(calculatedValue);
-      }
-    }
+    // Get first
+    encryptSeq2(passPhrase[0], null, null, codecArray);
 
-    encryptSeq2("a", null, null, directionMap);
-
-    //runChipherText(encrypted.toString());
-    //encryptSeq2(encrypted[0]);
-    /*let ASCII = [];
-		encrypted.toString().split('').forEach((letter, i) => {
-			const el = getElementViaPosition(letter.charCodeAt(0));
-			el.style.background = 'blue';
-		});
-
-		console.log(ASCII);
-		const decrypted = AES.decrypt(encrypted, 'password');
-		console.log(encrypted.toString(), 'dec', decrypted.toString(), 'hash-dec', decrypted.toString(encUtf8));*/
   }
 };
 
@@ -74,30 +49,19 @@ const runEncryptionSequence = () => {
  * Generates the grid in the html document
  * @return {void}
  */
-const runProgram = () => {
-  const parent = document.querySelector("#content");
-  parent.innerHTML = ""; // Clear container
-  numberOfCellsNeeded = Math.floor(rowLength * numOfRows);
+let cellCount;
 
-  for (let i = 0; i < numberOfCellsNeeded; i++) {
-    const node = document.createElement("div");
-    node.className = cellSelector;
-    node.id = `id_${i}`;
-    node.style.width = `${cellWidth}px`;
-    node.style.height = `${cellHeight}px`;
-    if (borderWidth > 0) {
-      node.style.border = `${borderWidth}px solid ${borderColor}`;
-    }
-    node.innerHTML = "&nbsp;";
-    parent.append(node);
-  }
+const runProgram = () => {
+  const canvas = new MatrixCanvas();
+  canvas.init();
+  cellCount = canvas.getCellCount();
 };
 
-const scale = chroma.scale();
+const scale = chroma.scale('OrRd');
 
 const encryptSeq2 = (cipherChar, element, tracker = 0, codecArray) => {
   const initialElement = !element
-    ? getElementViaPosition(Math.floor(randomNumber(0, numberOfCellsNeeded)))
+    ? getElementViaPosition(Math.floor(randomNumber(0, cellCount)))
     : element;
 
   // Get direction of crawl based on codecArray differential value.
@@ -120,6 +84,22 @@ const encryptSeq2 = (cipherChar, element, tracker = 0, codecArray) => {
     (el) => {
       if (codecArray[tracker + 1]) {
         encryptSeq2("a", el, tracker + 1, codecArray);
+        const callback = (el) => {
+          //el.style.background = 'lightblue';
+          createRandomLandscape(el, (e, i) => {
+            setTimeout(()=> {
+              e.classList.add("grow");
+              //e.style.background = scale(i/20)
+            }, i * 50)
+          }, 1,0, 4);
+        }
+        startASCIIExplosion(el, 15, callback);
+        /*createRandomLandscape(el, (e, i) => {
+          setTimeout(()=> {
+            //e.classList.add("grow");
+            e.style.background = scale(i/20)
+          }, i * 50)
+        }, 1,0, 20);*/
       }
     },
     30
@@ -127,12 +107,6 @@ const encryptSeq2 = (cipherChar, element, tracker = 0, codecArray) => {
 };
 
 const main = async () => {
-  const div = document.createElement("div");
-  const backdrop = document.createElement("div");
-  div.id = "content";
-  backdrop.id = "backdrop";
-  document.querySelector("body").appendChild(div);
-  document.querySelector("body").appendChild(backdrop);
   document.addEventListener("DOMContentLoaded", () => {
     runProgram();
 
@@ -152,4 +126,14 @@ const main = async () => {
   });
 };
 
-main().then(() => console.log("Started"));
+main().then(()  => {
+  document.addEventListener('click', (e)=> {
+    createRandomLandscape(e.target, (el, i) => {
+      setTimeout(()=> {
+        //el.classList.add("grow");
+        el.style.background = 'blue';
+      }, i * 50)
+    }, 1,0, 10);
+  })
+
+});

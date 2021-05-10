@@ -9,10 +9,13 @@ import {
   vectorToLinear,
   getCharsMap,
   randomNumber,
+  getElementFromVector,
 } from "./utils.js";
-import { rowLength, text2 } from "./constants";
+import { MatrixCanvas, text2 } from "./constants";
 
-const loadingString = ["—", "/", "|", "\\"];
+const canvas = new MatrixCanvas();
+const rowLength = canvas.getRowLength();
+const loadingString = "-/|\\";
 
 /** Element mutations **/
 export const startASCIILoader = (ele, loopCount = 4, time, onEndCallback) => {
@@ -139,7 +142,6 @@ export const trajectoryMove = (
     } while (mathPre === 0);
   }
   // ghetto
-
   const interval = setInterval(() => {
     const id = vectorToLinear(vector);
     const el = document.getElementById(`id_${id}`);
@@ -270,4 +272,30 @@ export const deleteEverythingButMe = (ele, querySelector) => {
   });
 };
 
-export const moveWithStyle = (ele, hello) => {};
+export const createRandomLandscape = (
+  el,
+  callback,
+  ratio = 0,
+  amplitude = 0,
+  range = 1
+) => {
+  let firstPosition = getPositionInMatrix(el);
+  for (let i = 0; i < range; i++) {
+    const mutation = Math.floor(i * ratio + amplitude);
+    const ele = getElementViaPosition(firstPosition);
+    let vector = LinearToVector(firstPosition);
+    firstPosition++;
+
+    if(callback && ele) {
+      callback(ele, i);
+    }
+
+    for (let j = 0; j < mutation; j++) {
+      vector[1] = --vector[1];
+      const newEl = getElementFromVector(vector);
+      if (callback && newEl) {
+        callback(newEl, j);
+      }
+    }
+  }
+};
