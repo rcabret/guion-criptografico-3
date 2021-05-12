@@ -20,7 +20,7 @@ export const getNeighborsByStep = (
   callback,
   onEndCallback
 ) => {
-  if(!ele) {
+  if (!ele) {
     return;
   }
   const cp = getPositionInMatrix(ele);
@@ -140,11 +140,11 @@ export const LinearToVector = (pos) => {
 };
 
 export const getPositionInMatrix = (ele) => {
-  if(!ele) {
+  if (!ele) {
     return;
   }
   return Number(ele.id.replace("id_", ""));
-}
+};
 
 export const getElementViaPosition = (position) =>
   document.getElementById(`id_${position}`);

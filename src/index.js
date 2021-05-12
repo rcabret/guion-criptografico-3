@@ -6,16 +6,20 @@ import {
   buildAndGetDispatchingArray,
 } from "./modules/utils";
 
-import {
-  MatrixCanvas,
-} from "./modules/constants.js";
+import { MatrixCanvas } from "./modules/constants.js";
 
 import AES from "crypto-js/aes";
 import Sha256 from "crypto-js/sha256";
 
-import {trajectoryMove, startASCIILoader, createRandomLandscape, startASCIIExplosion} from "./modules/sequences";
+import {
+  trajectoryMove,
+  createRandomLandscape,
+  startASCIIExplosion,
+  deleteEverythingButMe,
+} from "./modules/sequences";
 
 import * as chroma from "chroma-js";
+import { Terminal } from "./modules/terminal";
 
 // Updates dimension number of cells on window resize
 let activeResizing;
@@ -33,14 +37,17 @@ const printCharToMatrix = (letter, string, index) => {
 };
 
 const runEncryptionSequence = () => {
-  if (typedString.length) {
+  const commandLineInputValue = terminal.getInputValue();
+  terminal.addExecutedCommandToHistory(commandLineInputValue);
+
+  if (commandLineInputValue.length) {
     const passPhrase = Sha256("temp_passphrase");
-    const encrypted = AES.encrypt(typedString, passPhrase.toString());
+    const encrypted = AES.encrypt(commandLineInputValue, passPhrase.toString());
+    terminal.addStringToCommandHistory(`> aes-chipertext: ${encrypted}`);
     const codecArray = buildAndGetDispatchingArray(encrypted.toString());
 
     // Get first
     encryptSeq2(passPhrase[0], null, null, codecArray);
-
   }
 };
 
@@ -50,14 +57,16 @@ const runEncryptionSequence = () => {
  * @return {void}
  */
 let cellCount;
-
+let terminal;
 const runProgram = () => {
   const canvas = new MatrixCanvas();
   canvas.init();
   cellCount = canvas.getCellCount();
+  terminal = new Terminal();
+  terminal.init();
 };
 
-const scale = chroma.scale('OrRd');
+const scale = chroma.cubehelix().lightness([0, 1]);
 
 const encryptSeq2 = (cipherChar, element, tracker = 0, codecArray) => {
   const initialElement = !element
@@ -71,7 +80,7 @@ const encryptSeq2 = (cipherChar, element, tracker = 0, codecArray) => {
     initialElement,
     direction,
     15,
-    (e) => {
+    (e, i) => {
       if (e.hasAttribute("hello")) {
         let visited = parseFloat(e.getAttribute("hello"));
         let newScale = visited + 0.02;
@@ -79,27 +88,35 @@ const encryptSeq2 = (cipherChar, element, tracker = 0, codecArray) => {
       } else {
         e.setAttribute("hello", 0);
         e.classList.add("grow");
+        e.style.background = scale(i / 20);
       }
     },
     (el) => {
       if (codecArray[tracker + 1]) {
         encryptSeq2("a", el, tracker + 1, codecArray);
         const callback = (el) => {
-          //el.style.background = 'lightblue';
-          createRandomLandscape(el, (e, i) => {
-            setTimeout(()=> {
+          el.style.background = "#F8E2DAFF";
+        };
+
+        const endCallback = (el) => {};
+
+        startASCIIExplosion(el, 5, callback);
+
+        return;
+        createRandomLandscape(
+          el,
+          (e, i) => {
+            setTimeout(() => {
               e.classList.add("grow");
-              //e.style.background = scale(i/20)
-            }, i * 50)
-          }, 1,0, 4);
-        }
-        startASCIIExplosion(el, 15, callback);
-        /*createRandomLandscape(el, (e, i) => {
-          setTimeout(()=> {
-            //e.classList.add("grow");
-            e.style.background = scale(i/20)
-          }, i * 50)
-        }, 1,0, 20);*/
+              if (!e.hasAttribute("hello")) {
+                e.style.background = scale(i / 10);
+              }
+            }, i * 50);
+          },
+          0.5,
+          0,
+          35
+        );
       }
     },
     30
@@ -115,25 +132,29 @@ const main = async () => {
         e.preventDefault();
       }
       if (e.code === "Enter") {
+        if (terminal && terminal.getInputValue() === "clear") {
+          terminal.addExecutedCommandToHistory('clear');
+          deleteEverythingButMe();
+          return;
+        }
         runEncryptionSequence();
-        return;
-      }
-      if (e.code.indexOf("Key") > -1 || e.code === "Space") {
-        typedString += e.key;
-        printCharToMatrix(e.key, typedString);
       }
     });
   });
 };
 
-main().then(()  => {
-  document.addEventListener('click', (e)=> {
-    createRandomLandscape(e.target, (el, i) => {
-      setTimeout(()=> {
-        //el.classList.add("grow");
-        el.style.background = 'blue';
-      }, i * 50)
-    }, 1,0, 10);
-  })
-
+main().then(() => {
+  document.addEventListener("click", (e) => {
+    createRandomLandscape(
+      e.target,
+      (el, i) => {
+        setTimeout(() => {
+          el.style.background = "blue";
+        }, i * 30);
+      },
+      1,
+      0,
+      10
+    );
+  });
 });

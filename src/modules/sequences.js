@@ -261,12 +261,14 @@ const shimmerSequence = (ele) => {
   }, 100);
 };
 
-export const deleteEverythingButMe = (ele, querySelector) => {
+export const deleteEverythingButMe = (querySelector = '.cell', ele) => {
   const all = document.querySelectorAll(querySelector);
   all.forEach((e, i) => {
     setTimeout(() => {
-      if (e.id !== ele.id) {
+      if (ele === undefined || ele && e.id !== ele.id ) {
         e.innerText = "";
+        e.style.background = 'none';
+        e.removeAttribute('hello');
       }
     }, Math.random() * i * 0.5);
   });
@@ -286,7 +288,7 @@ export const createRandomLandscape = (
     let vector = LinearToVector(firstPosition);
     firstPosition++;
 
-    if(callback && ele) {
+    if (callback && ele) {
       callback(ele, i);
     }
 
