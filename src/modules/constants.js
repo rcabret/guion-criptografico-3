@@ -1,3 +1,4 @@
+
 export const text1 = "Hola yo soy un text que quiere aparecer en el screen";
 export const text2 = "Pensé...     que me querias";
 
@@ -32,7 +33,8 @@ export class MatrixCanvas {
   }
 
   init() {
-    document.querySelector("body").appendChild(this.parentElement);
+    const body = document.querySelector("body");
+    body.appendChild(this.parentElement);
     this.parentElement.innerHTML = "";
     const img = new Image();
     img.src = "/pr.png";
@@ -40,6 +42,7 @@ export class MatrixCanvas {
     for (let i = 0; i < this.cellCount; i++) {
       const node = document.createElement("span");
       node.className = this.cellSelector;
+      //const [x, y] = LinearToVector(i);
       node.id = `id_${i}`;
       node.style.width = `${this.config.cellWidth}px`;
       node.style.height = `${this.config.cellHeight}px`;

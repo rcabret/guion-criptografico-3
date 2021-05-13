@@ -126,7 +126,7 @@ export const trajectoryMove = (
   loopCount,
   callback,
   onEndCallback,
-  time = 10
+  time = 30
 ) => {
   const numPos = getPositionInMatrix(ele);
   let count = 0;

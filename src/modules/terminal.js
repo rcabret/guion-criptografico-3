@@ -7,10 +7,11 @@ export class Terminal {
   }
 
   init() {
-    this.terminalParent.innerHTML = `<div>
+    this.terminalParent.innerHTML = `
+          <div>
 			<ul id="command-history"></ul>
-			<span>
-				${this.terminalName}  <input id="input-line" />
+			<span id="input-line">
+				${this.terminalName}  <input id="command-input" />
 			</span>
 		  </div>`;
 
@@ -19,7 +20,7 @@ export class Terminal {
   }
 
   _getInputElement() {
-    return document.getElementById("input-line");
+    return document.getElementById("command-input");
   }
 
   _scrollToBottom() {
@@ -48,5 +49,10 @@ export class Terminal {
 
   addExecutedCommandToHistory(string) {
     this.addStringToCommandHistory(`${this.terminalName} ${string}`);
+  }
+
+  toggleInputLine() {
+    const inputLine = document.getElementById("input-line");
+    inputLine.classList.toggle("hide");
   }
 }

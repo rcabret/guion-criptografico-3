@@ -153,6 +153,7 @@ export const getElementFromVector = (vector) => {
   const a = vectorToLinear(vector);
   return getElementViaPosition(a);
 };
+
 /** Debounce for later **/
 export const debounce = (func, wait, immediate) => {
   let timeout;

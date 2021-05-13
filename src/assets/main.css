@@ -11,14 +11,6 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
-#backdrop {
-  position: fixed;
-  z-index: 1;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-}
-
 body {
   color: #ebc4ca;
   font-weight: 900;
@@ -105,7 +97,7 @@ body {
 
 #terminal {
   width: 100%;
-  height: 80px;
+  height: 120px;
   bottom: 0;
   background: #2a2828;
   position: fixed;
@@ -119,13 +111,7 @@ body {
   overflow-y: scroll;
 }
 
-#terminal ul {
-}
-
-#terminal span {
-}
-
-#terminal #input-line {
+#terminal #command-input {
   outline: none;
   border: none;
   background: transparent;
