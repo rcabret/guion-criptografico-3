@@ -11,6 +11,15 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
+.backdrop {
+  backdrop-filter: blur(6px);
+  width: 50vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
 body {
   color: #ebc4ca;
   font-weight: 900;
@@ -101,7 +110,7 @@ body {
   bottom: 0;
   background: #2a2828;
   position: fixed;
-  z-index: 100;
+  z-index: 1000;
   color: white;
   font-weight: 200;
   letter-spacing: 1.2px;

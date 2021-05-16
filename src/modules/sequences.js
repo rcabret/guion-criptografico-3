@@ -11,14 +11,14 @@ import {
   randomNumber,
   getElementFromVector,
 } from "./utils.js";
-import { MatrixCanvas, text2 } from "./constants";
+import { MatrixCanvas, text2 } from "./canvas";
 
 const canvas = new MatrixCanvas();
 const rowLength = canvas.getRowLength();
 const loadingString = "-/|\\";
 
 /** Element mutations **/
-export const startASCIILoader = (ele, loopCount = 4, time, onEndCallback) => {
+export const startASCIILoader = (ele, loopCount = 6, time = 100, onEndCallback) => {
   let i = 1;
   let counter = 0;
   const interval = setInterval(() => {
@@ -40,10 +40,10 @@ export const startASCIILoader = (ele, loopCount = 4, time, onEndCallback) => {
 
 export const startASCIIExplosion = (
   ele,
-  loopCount,
   callback,
   onEndCallback,
-  onStartCallback
+  onStartCallback,
+  loopCount = 5,
 ) => {
   let counter = 0;
 
@@ -277,9 +277,9 @@ export const deleteEverythingButMe = (querySelector = '.cell', ele) => {
 export const createRandomLandscape = (
   el,
   callback,
-  ratio = 0,
+  ratio = 1,
   amplitude = 0,
-  range = 1
+  range = 10
 ) => {
   let firstPosition = getPositionInMatrix(el);
   for (let i = 0; i < range; i++) {

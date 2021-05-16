@@ -1,4 +1,4 @@
-export class Terminal {
+class Terminal {
   constructor() {
     this.body = document.querySelector("body");
     this.terminalParent = document.createElement("aside");
@@ -56,3 +56,5 @@ export class Terminal {
     inputLine.classList.toggle("hide");
   }
 }
+
+export default Terminal;

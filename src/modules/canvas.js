@@ -1,4 +1,3 @@
-
 export const text1 = "Hola yo soy un text que quiere aparecer en el screen";
 export const text2 = "Pensé...     que me querias";
 
@@ -22,11 +21,10 @@ export class MatrixCanvas {
     this.cellSelector = cellSelector;
 
     this.rowLength = Math.floor(
-        window.innerWidth  /
-        (configObj.cellWidth + configObj.borderWidth * 2)
+      window.innerWidth / (configObj.cellWidth + configObj.borderWidth * 2)
     );
     this.numOfRows = Math.floor(
-        (window.innerHeight - 100) /
+      (window.innerHeight - 100) /
         (configObj.cellHeight + configObj.borderWidth * 2)
     );
     this.cellCount = Math.floor(this.rowLength * this.numOfRows);
@@ -34,7 +32,12 @@ export class MatrixCanvas {
 
   init() {
     const body = document.querySelector("body");
+    const backdrop = document.createElement("div");
+    backdrop.className = "backdrop";
+
     body.appendChild(this.parentElement);
+    body.append(backdrop);
+
     this.parentElement.innerHTML = "";
     const img = new Image();
     img.src = "/pr.png";
@@ -51,12 +54,12 @@ export class MatrixCanvas {
       }
 
       //node.innerHTML = "&nbsp;";
+
       this.parentElement.append(node);
     }
   }
 
   getRowLength() {
-    console.log('in here')
     return this.rowLength;
   }
 

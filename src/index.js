@@ -6,25 +6,26 @@ import {
   buildAndGetDispatchingArray,
 } from "./modules/utils";
 
-import { MatrixCanvas } from "./modules/constants.js";
+import { MatrixCanvas } from "./modules/canvas.js";
 
 import AES from "crypto-js/aes";
 import Sha256 from "crypto-js/sha256";
 
 import {
-  trajectoryMove,
-  createRandomLandscape,
-  startASCIIExplosion,
-  deleteEverythingButMe,
+	trajectoryMove,
+	createRandomLandscape,
+	deleteEverythingButMe, startASCIILoader,
 } from "./modules/sequences";
 
 import * as chroma from "chroma-js";
-import { Terminal } from "./modules/terminal";
+import Terminal from "./modules/terminal";
+import CanvasConfig from "./modules/config-service";
 
 let cellCount;
 let terminal;
 let canvas;
-const scale = chroma.cubehelix().lightness([0, 1]);
+let config = new CanvasConfig();
+const scale = config.getScale();
 
 const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
   const initialElement = !element
@@ -49,7 +50,7 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
   const onEnd = (el) => {
     // Recursion is DONE
     if (tracker === codecArray.length - 1) {
-      terminal.addStringToCommandHistory(`> done`);
+      terminal.addStringToCommandHistory(`> done creating composition`);
       return;
     }
 
@@ -62,22 +63,23 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
       };
 
       // Mark point of recursion start
-      startASCIIExplosion(el, 5, callback);
+      config.getShape()(el, callback);
+      //startASCIIExplosion(el, 5, callback);
 
       /*createRandomLandscape(
-          el,
-          (e, i) => {
-            setTimeout(() => {
-              e.classList.add("grow");
-              if (!e.hasAttribute("hello")) {
-                e.style.background = scale(i / 10);
-              }
-            }, i * 50);
-          },
-          0.5,
-          0,
-          35
-      );*/
+				el,
+				(e, i) => {
+				  setTimeout(() => {
+					e.classList.add("grow");
+					if (!e.hasAttribute("hello")) {
+					  e.style.background = scale(i / 10);
+					}
+				  }, i * 50);
+				},
+				0.5,
+				0,
+				35
+			);*/
     }
   };
 
@@ -107,6 +109,9 @@ main().then(() => {
       }
       const value = terminal.getInputValue();
       switch (value) {
+        case "change":
+          config.updateConfig({ shape: "explosion" });
+          break;
         // Clear background on cells
         case "clear":
           terminal.addExecutedCommandToHistory(value);
@@ -128,7 +133,9 @@ main().then(() => {
             terminal.addStringToCommandHistory(
               `> aes-chipertext: ${encrypted}`
             );
-            terminal.addStringToCommandHistory(`> creating composition...`);
+            terminal.addStringToCommandHistory(
+              `> creating composition from ciphertext...`
+            );
             const codecArray = buildAndGetDispatchingArray(
               encrypted.toString()
             );

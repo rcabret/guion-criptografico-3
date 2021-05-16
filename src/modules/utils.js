@@ -8,7 +8,7 @@
  *s
  * TODO: Will accept a 'neighborStepCallback,  change callback to 'onEndCallback'
  */
-import { MatrixCanvas } from "./constants.js";
+import { MatrixCanvas } from "./canvas.js";
 
 const canvas = new MatrixCanvas();
 const rowLength = canvas.getRowLength();
