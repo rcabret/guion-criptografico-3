@@ -3,7 +3,7 @@ import {createRandomLandscape, startASCIIExplosion} from "./sequences";
 
 const defaults = {
     scale: 'skin',
-    shape: 'landscape',
+    shape: 'explosion',
 }
 
 const _scaleMap = {

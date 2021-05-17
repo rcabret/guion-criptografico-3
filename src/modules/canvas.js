@@ -2,23 +2,20 @@ export const text1 = "Hola yo soy un text que quiere aparecer en el screen";
 export const text2 = "Pensé...     que me querias";
 
 const defaults = {
-  cellWidth: 14,
-  cellHeight: 14,
   borderColor: "#f9f9f9",
   //borderColor: "#031E57FF",
   borderWidth: 1,
+  cellWidth: 14,
+  cellHeight: 14,
+  cellSelector: "cell",
+  canvasId: "content",
+  container: "body",
 };
 
 export class MatrixCanvas {
-  constructor(
-    configObj = defaults,
-    parentId = "content",
-    cellSelector = "cell"
-  ) {
-    this.config = { ...defaults, ...configObj };
-    this.parentElement = document.createElement("pre");
-    this.parentElement.id = parentId;
-    this.cellSelector = cellSelector;
+  constructor(configObj = defaults) {
+    this._config = { ...defaults, ...configObj };
+    this._parentElement = document.createElement("pre");
 
     this.rowLength = Math.floor(
       window.innerWidth / (configObj.cellWidth + configObj.borderWidth * 2)
@@ -35,27 +32,34 @@ export class MatrixCanvas {
     const backdrop = document.createElement("div");
     backdrop.className = "backdrop";
 
-    body.appendChild(this.parentElement);
+    body.appendChild(this._parentElement);
     body.append(backdrop);
 
-    this.parentElement.innerHTML = "";
-    const img = new Image();
-    img.src = "/pr.png";
+    this._parentElement.innerHTML = "";
+
+    const {
+      cellWidth,
+      cellHeight,
+      cellSelector,
+      borderWidth,
+      borderColor,
+    } = this._config;
 
     for (let i = 0; i < this.cellCount; i++) {
       const node = document.createElement("span");
-      node.className = this.cellSelector;
+
+      node.className = cellSelector;
       //const [x, y] = LinearToVector(i);
       node.id = `id_${i}`;
-      node.style.width = `${this.config.cellWidth}px`;
-      node.style.height = `${this.config.cellHeight}px`;
-      if (this.config.borderWidth > 0) {
-        node.style.border = `${this.config.borderWidth}px solid ${this.config.borderColor}`;
+      node.style.width = `${cellWidth}px`;
+      node.style.height = `${cellHeight}px`;
+      if (this._config.borderWidth > 0) {
+        node.style.border = `${borderWidth}px solid ${borderColor}`;
       }
 
       //node.innerHTML = "&nbsp;";
 
-      this.parentElement.append(node);
+      this._parentElement.append(node);
     }
   }
 

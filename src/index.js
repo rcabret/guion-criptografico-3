@@ -12,9 +12,10 @@ import AES from "crypto-js/aes";
 import Sha256 from "crypto-js/sha256";
 
 import {
-	trajectoryMove,
-	createRandomLandscape,
-	deleteEverythingButMe, startASCIILoader,
+  trajectoryMove,
+  createRandomLandscape,
+  deleteEverythingButMe,
+  startASCIILoader,
 } from "./modules/sequences";
 
 import * as chroma from "chroma-js";
@@ -66,20 +67,20 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
       config.getShape()(el, callback);
       //startASCIIExplosion(el, 5, callback);
 
-      /*createRandomLandscape(
-				el,
-				(e, i) => {
-				  setTimeout(() => {
-					e.classList.add("grow");
-					if (!e.hasAttribute("hello")) {
-					  e.style.background = scale(i / 10);
-					}
-				  }, i * 50);
-				},
-				0.5,
-				0,
-				35
-			);*/
+      createRandomLandscape(
+        el,
+        (e, i) => {
+          setTimeout(() => {
+            //e.classList.add("grow");
+            if (!e.hasAttribute("hello")) {
+              e.style.background = scale(i / 10);
+            }
+          }, i * 50);
+        },
+        0.5,
+        0,
+        35
+      );
     }
   };
 
