@@ -10,6 +10,9 @@ import {
   getCharsMap,
   randomNumber,
   getElementFromVector,
+  getVectorFromElement,
+  getOtherNeighbor,
+  getEveryOtherNeighborsByStep, getRingTwo,
 } from "./utils.js";
 import { MatrixCanvas, text2 } from "./canvas";
 
@@ -26,34 +29,8 @@ export const startASCIILoader = (
 ) => {
   let i = 1;
   let counter = 0;
-  let fpsInterval = 1000 / time;
-  let then = Date.now();
 
   const step = () => {
-    counter++;
-
-    let now = Date.now();
-    let elapsed = now - then;
-
-    if (ele === undefined) {
-      return;
-    }
-    ele.innerText = loadingString[i];
-    i = getIndex(i, loadingString.length);
-
-    if (counter < loopCount && elapsed > fpsInterval) {
-      then = now - (elapsed % fpsInterval);
-      requestAnimationFrame(step);
-      return;
-    }
-    if (onEndCallback) {
-      onEndCallback(ele);
-    }
-  };
-
-  window.requestAnimationFrame(step);
-
-  const interval = setInterval(() => {
     counter++;
     //e.target.innerText = string.charAt(Math.floor(Math.random() * string.length));
     if (ele === undefined) {
@@ -67,7 +44,9 @@ export const startASCIILoader = (
         onEndCallback(ele);
       }
     }
-  }, time);
+  };
+
+  const interval = setInterval(step, time);
 };
 
 export const startASCIIExplosion = (
@@ -77,32 +56,39 @@ export const startASCIIExplosion = (
   onStartCallback,
   loopCount = 5
 ) => {
-  let counter = 0;
-
   if (onStartCallback) {
     onStartCallback(ele);
   }
 
-  const interval = setInterval(() => {
+  let counter = 0;
+  const step = () => {
     counter++;
-    getNeighborsByStep(ele, counter, loopCount, callback, onEndCallback);
+    getEveryOtherNeighborsByStep(
+      ele,
+      counter,
+      loopCount,
+      callback,
+      onEndCallback
+    );
     if (counter >= loopCount) {
       clearInterval(interval);
     }
-  }, 50);
+  };
+
+  const interval = setInterval(step, 50);
 };
 
 export const drawRing = (ele, step, callback) => {
-  const coordinates = getRing(ele, step);
+  const coordinates = getRingTwo(ele, step);
 
-  coordinates.forEach((x) => {
-    if (x > 0) {
-      const ele = getElementViaPosition(x);
+  coordinates.forEach((v,i) => {
+    if (v.length && i > 0) {
+      const ele = getElementFromVector(v);
       if (!ele) {
         return;
       }
       // Execute every step
-      callback(ele);
+      callback(ele, i);
     }
   });
 };
@@ -124,34 +110,6 @@ export const expandRing = (ele, startingPoint, loopCount, speed) => {
   }, speed);
 };
 
-/**
- * Moves in straight line in a certain direction
- *
- * @param ele
- * @param loopCount
- * @param callback
- * @param onEndCallback
- */
-export const moveSequence = (ele, loopCount, callback, onEndCallback) => {
-  let count = 0;
-  // random direction
-  const d = Math.floor(Math.random() * 8) + 1;
-  let interval = setInterval(() => {
-    const x = move(ele, d, count);
-    const el = document.getElementById(`id_${x}`);
-    if (el && callback) {
-      callback(el, count);
-    }
-    count++;
-    if (count > loopCount) {
-      clearInterval(interval);
-      if (onEndCallback) {
-        onEndCallback(el);
-      }
-    }
-  }, 50);
-};
-
 export const trajectoryMove = (
   ele,
   trajectory,
@@ -160,10 +118,9 @@ export const trajectoryMove = (
   onEndCallback,
   time = 30
 ) => {
-  const numPos = getPositionInMatrix(ele);
   let count = 0;
-  let vector = LinearToVector(numPos);
   let mathPre;
+  let vector = getVectorFromElement(ele);
 
   // So ghetto
   if (trajectory) {
@@ -175,11 +132,11 @@ export const trajectoryMove = (
   }
   // ghetto
   const interval = setInterval(() => {
-    const id = vectorToLinear(vector);
-    const el = document.getElementById(`id_${id}`);
-    if (callback) {
+    const el = getElementFromVector(vector);
+    if (el && callback) {
       callback(el, count);
     }
+    //TODO: Revise this movement
     const x = vector[0] - mathPre * Math.floor(count * 0.25);
     const y = vector[1] - mathPre * Math.round(Math.random());
     vector = [x, y];

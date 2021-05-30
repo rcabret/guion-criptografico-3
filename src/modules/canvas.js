@@ -1,3 +1,5 @@
+import {LinearToVector} from "./utils";
+
 export const text1 = "Hola yo soy un text que quiere aparecer en el screen";
 export const text2 = "Pensé...     que me querias";
 
@@ -46,8 +48,9 @@ export class MatrixCanvas {
 
     for (let i = 0; i < this.cellCount; i++) {
       const node = document.createElement("span");
-      //const [x, y] = LinearToVector(i);
+      const [x, y] = LinearToVector(i);
       node.id = `id_${i}`;
+      //node.id = `${x}_${y}`
       node.style.width = `${cellWidth}px`;
       node.style.height = `${cellHeight}px`;
       if (this._config.borderWidth > 0) {

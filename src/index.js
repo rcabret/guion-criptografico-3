@@ -4,6 +4,7 @@ import {
   getElementViaPosition,
   randomNumber,
   buildAndGetDispatchingArray,
+  getRing,
 } from "./modules/utils";
 
 import { MatrixCanvas } from "./modules/canvas.js";
@@ -15,6 +16,8 @@ import {
   trajectoryMove,
   createRandomLandscape,
   deleteEverythingButMe,
+  startASCIIExplosion,
+  drawRing,
 } from "./modules/sequences";
 
 import Terminal from "./modules/terminal";
@@ -28,14 +31,13 @@ let config = new CanvasConfig();
 //let scale = config.getScale();
 
 const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
-  let scale = config.getScale();
+  const scale = config.getScale();
 
   const initialElement = !element
     ? getElementViaPosition(Math.floor(randomNumber(0, cellCount)))
     : element;
 
-  // Get direction of crawl based on codecArray differential value.
-  const direction = codecArray[tracker] > 0 ? 1 : -1;
+  initialElement.style.background = 'red';
 
   const step = (el, i) => {
     try {
@@ -45,9 +47,9 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
         el.setAttribute("hello", newScale);
       } else {
         el.setAttribute("hello", 0);
-        el.classList.add("grow");
+        //el.classList.add("grow");
         //el.style.background = scale(i / 20);
-        //el.style.background = "#F8E2DAFF";
+        el.style.background = "#F8E2DAFF";
       }
     } catch (e) {
       console.error(e);
@@ -55,6 +57,7 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
   };
 
   const onEnd = (el) => {
+    //el.style.background = "red";
     // Recursion is DONE
     if (tracker === codecArray.length - 1) {
       terminal.addStringToCommandHistory(`> done creating composition`);
@@ -70,6 +73,9 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
       config.getShape()(el, scale);
     }
   };
+
+  // Get direction of crawl based on codecArray differential value.
+  const direction = codecArray[tracker] > 0 ? 1 : -1;
 
   trajectoryMove(initialElement, direction, 15, step, onEnd, 50);
 };
@@ -141,6 +147,10 @@ main().then(() => {
 
   // Click event
   document.addEventListener("click", (e) => {
+    drawRing(e.target, 1, (e) => {
+      e.style.background = "blue";
+    });
+    return;
     createRandomLandscape(
       e.target,
       (el, i) => {

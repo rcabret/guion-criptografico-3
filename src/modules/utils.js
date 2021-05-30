@@ -13,31 +13,28 @@ import { MatrixCanvas } from "./canvas.js";
 const canvas = new MatrixCanvas();
 const rowLength = canvas.getRowLength();
 
-export const getNeighborsByStep = (
-  ele,
+export const getEveryOtherNeighborsByStep = (
+  el,
   step,
   loopCount,
   callback,
   onEndCallback
 ) => {
-  if (!ele) {
-    return;
-  }
-  const cp = getPositionInMatrix(ele);
+  const [x, y] = getVectorFromElement(el);
   const arr = [
-    cp - rowLength * step, //top-center
-    cp - rowLength * step + step, //top-right
-    cp + step, //center-right
-    cp + rowLength * step + step, //bottom-right
-    cp + rowLength * step, //bottom-center
-    cp + rowLength * step - step, //bottom-left
-    cp - step, //center-left
-    cp - rowLength * step - step, //top-left
+    [x, y + step],
+    [x + step, y + step],
+    [x + step, y],
+    [x + step, y - step],
+    [x, y - step],
+    [x - step, y - step],
+    [x - step, y],
+    [x - step, y + step],
   ];
 
-  arr.forEach((x) => {
-    if (x > 0) {
-      const ele = getElementViaPosition(x);
+  arr.forEach((v) => {
+    if (v && v.length) {
+      const ele = getElementFromVector(v);
       if (!ele) {
         return;
       }
@@ -49,52 +46,35 @@ export const getNeighborsByStep = (
       }
     }
   });
-  // TODO: Run callback when finished
 };
 
-export const move = (ele, direction = 5, step = 1) => {
-  const cp = getPositionInMatrix(ele);
-  switch (direction) {
-    case 1: // up
-      return cp - rowLength * step;
-    case 2: // up right
-      return cp - rowLength * step + step;
-    case 3: // right
-      return cp + step;
-    case 4: // down right
-      return cp + rowLength * step + step;
-    case 5: // down
-      return cp + rowLength * step;
-    case 6: //down left
-      return cp + rowLength * step - step;
-    case 7: // left
-      return cp - step;
-    case 8: // up left
-    default:
-      return cp - rowLength * step - step;
-  }
-};
 /**
  *  Square around element
  * @param ele
  * @param radius
  * @returns {*[]}
  */
-export const getRing = (ele, radius) => {
-  const cp = getPositionInMatrix(ele);
-  const equations = [rowLength, -1, -rowLength, 1];
+export const getRingTwo = (ele, radius) => {
+  const [x, y] = getVectorFromElement(ele);
+  const equations = [
+    [0, 1],
+    [-1, 0],
+    [0, -1],
+    [1, 0],
+  ];
   const perimeter = radius * 8;
-  let activeEq = equations[0];
-  let cornerCounter = 1;
-  let sP = [cp - rowLength * radius + radius];
+  let cornerCounter = 0;
+  let sP = [[x + radius, y - radius]];
+
+  getElementFromVector(sP[0]).style.background = "red";
 
   for (let i = 0; i < perimeter - 1; i++) {
-    let next = sP[i] + activeEq;
-    sP.push(next);
-    if ((i + 1) % (radius * 2) === 0) {
-      activeEq = equations[cornerCounter];
-      cornerCounter++;
-    }
+    const [x, y] = equations[cornerCounter];
+    const [newX, newY] = sP[i];
+    sP.push([newX + x, newY + y]);
+
+    cornerCounter =
+      (i + 1) % (radius * 2) === 0 ? cornerCounter + 1 : cornerCounter;
   }
   return sP;
 };
@@ -154,7 +134,10 @@ export const getElementFromVector = (vector) => {
   return getElementViaPosition(a);
 };
 
-export const getVectorFromElement = (el) => {};
+export const getVectorFromElement = (el) => {
+  const a = getPositionInMatrix(el);
+  return LinearToVector(a);
+};
 
 /** Debounce for later **/
 export const debounce = (func, wait, immediate) => {
@@ -208,7 +191,7 @@ export const buildAndGetDispatchingArray = (encryptedHashString) => {
 
   let outputArray = [];
   const encryptionArray = encryptedHashString.split("");
-  for (let i = 0; i < encryptionArray.length / 4; i++) {
+  for (let i = 0; i < encryptionArray.length; i++) {
     if (i + 1 < encryptionArray.length) {
       const a = encryptionArray[i].charCodeAt(0);
       const b = encryptionArray[i + 1].charCodeAt(0);

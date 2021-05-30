@@ -26,7 +26,7 @@ export const one = (el, scale) => {
 };
 
 export const two = (ele, scale) => {
-  startASCIIExplosion(ele);
+
 };
 
 export const three = (ele, scale) => {
