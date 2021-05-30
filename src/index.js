@@ -63,35 +63,11 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
 
     // Recursion continues
     if (codecArray[tracker + 1] !== undefined) {
-      // Continue recursion
+      // Recursion point
       encryptionSequence("a", codecArray, el, tracker + 1);
-      const callback = (el) => {
-        el.style.background = "#F8E2DAFF";
-      };
 
-      // Mark point of recursion start
-      /**
-       * TODO: No need for this callback. Dont do this too flexible
-       * choose a couple of cool mutations and work with randomizing the
-       * crawler or color scales. Work smart! MVP MVP
-       */
-      config.getShape()(el, callback);
-      //startASCIIExplosion(el, 5, callback);
-
-      createRandomLandscape(
-        el,
-        (e, i) => {
-          setTimeout(() => {
-            if (!e.hasAttribute("hello")) {
-              //e.classList.add("grow");
-              e.style.background = scale(i / 10);
-            }
-          }, i * 50);
-        },
-        1,
-        0,
-        10
-      );
+      // But draw some stuff
+      config.getShape()(el, scale);
     }
   };
 
@@ -122,16 +98,12 @@ main().then(() => {
       const value = terminal.getInputValue();
 
       // Handling config change
-      if (value.includes("config")) {
+      if (value.includes("--")) {
         handleConfigChange(value, config, terminal);
         return;
       }
 
       switch (value) {
-        case "change":
-          config.updateConfig({ shape: "explosion" });
-          break;
-        // Clear background on cells
         case "clear":
           terminal.addExecutedCommandToHistory(value);
           deleteEverythingButMe();

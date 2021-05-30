@@ -1,9 +1,9 @@
 import * as chroma from "chroma-js";
-import { createRandomLandscape, startASCIIExplosion } from "./sequences";
+import { one, three, two } from "./shapes/shapes";
 
 const defaults = {
   scale: "skin",
-  shape: "explosion",
+  shape: "one",
 };
 
 export const _scaleMap = {
@@ -13,8 +13,9 @@ export const _scaleMap = {
 };
 
 export const _shapesMap = {
-  landscape: createRandomLandscape,
-  explosion: startASCIIExplosion,
+  one: one,
+  two: two,
+  three: three,
 };
 
 class CanvasConfig {
@@ -32,10 +33,6 @@ class CanvasConfig {
 
   getShape() {
     return _shapesMap[this._configObj.shape];
-  }
-
-  getConfig() {
-    return this._configObj;
   }
 }
 

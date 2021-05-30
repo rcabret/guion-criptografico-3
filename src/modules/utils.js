@@ -154,9 +154,7 @@ export const getElementFromVector = (vector) => {
   return getElementViaPosition(a);
 };
 
-export const getVectorFromElement = (el) => {
-
-}
+export const getVectorFromElement = (el) => {};
 
 /** Debounce for later **/
 export const debounce = (func, wait, immediate) => {
@@ -210,7 +208,7 @@ export const buildAndGetDispatchingArray = (encryptedHashString) => {
 
   let outputArray = [];
   const encryptionArray = encryptedHashString.split("");
-  for (let i = 0; i < encryptionArray.length; i++) {
+  for (let i = 0; i < encryptionArray.length / 4; i++) {
     if (i + 1 < encryptionArray.length) {
       const a = encryptionArray[i].charCodeAt(0);
       const b = encryptionArray[i + 1].charCodeAt(0);
