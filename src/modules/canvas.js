@@ -49,7 +49,6 @@ export class MatrixCanvas {
     for (let i = 0; i < this.cellCount; i++) {
       const node = document.createElement("span");
       const [x, y] = LinearToVector(i);
-      //node.id = `id_${i}`;
       node.id = `${x}_${y}`
       node.style.width = `${cellWidth}px`;
       node.style.height = `${cellHeight}px`;
@@ -65,10 +64,6 @@ export class MatrixCanvas {
 
   getRowLength() {
     return this.rowLength;
-  }
-
-  getCellCount() {
-    return this.cellCount;
   }
 
   getNumOfRows() {
