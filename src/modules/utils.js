@@ -161,7 +161,7 @@ export const randomNumber = (min, max) => {
 export const areClose = (ele, secondEle) => {
   if (secondEle !== undefined) {
     const perimeter = getRing(secondEle, 2);
-    const currentPosition = getPositionInMatrix(ele);
+    const currentPosition = getVectorFromElement(ele);
     return perimeter.includes(currentPosition);
   }
 };

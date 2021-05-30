@@ -278,17 +278,17 @@ export const createRandomLandscape = (
   amplitude = 0,
   range = 10
 ) => {
-  let firstPosition = getPositionInMatrix(el);
+  let vector = getVectorFromElement(el);
+
   for (let i = 0; i < range; i++) {
-    const mutation = Math.floor(i * ratio + amplitude);
-    const ele = getElementViaPosition(firstPosition);
-    let vector = LinearToVector(firstPosition);
-    firstPosition++;
+    const ele = getElementFromVector(vector);
+    let [x, y] = vector;
 
     if (callback && ele) {
       callback(ele, i);
     }
 
+    const mutation = Math.floor(i * ratio + amplitude);
     for (let j = 0; j < mutation; j++) {
       vector[1] = --vector[1];
       const newEl = getElementFromVector(vector);
@@ -296,5 +296,8 @@ export const createRandomLandscape = (
         callback(newEl, j);
       }
     }
+
+    // Move x one to the right
+    vector = [x + 1, y];
   }
 };
