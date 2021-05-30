@@ -18,9 +18,41 @@ const rowLength = canvas.getRowLength();
 const loadingString = "-/|\\";
 
 /** Element mutations **/
-export const startASCIILoader = (ele, loopCount = 6, time = 100, onEndCallback) => {
+export const startASCIILoader = (
+  ele,
+  loopCount = 60,
+  time = 100,
+  onEndCallback
+) => {
   let i = 1;
   let counter = 0;
+  let fpsInterval = 1000 / time;
+  let then = Date.now();
+
+  const step = () => {
+    counter++;
+
+    let now = Date.now();
+    let elapsed = now - then;
+
+    if (ele === undefined) {
+      return;
+    }
+    ele.innerText = loadingString[i];
+    i = getIndex(i, loadingString.length);
+
+    if (counter < loopCount && elapsed > fpsInterval) {
+      then = now - (elapsed % fpsInterval);
+      requestAnimationFrame(step);
+      return;
+    }
+    if (onEndCallback) {
+      onEndCallback(ele);
+    }
+  };
+
+  window.requestAnimationFrame(step);
+
   const interval = setInterval(() => {
     counter++;
     //e.target.innerText = string.charAt(Math.floor(Math.random() * string.length));
@@ -43,7 +75,7 @@ export const startASCIIExplosion = (
   callback,
   onEndCallback,
   onStartCallback,
-  loopCount = 5,
+  loopCount = 5
 ) => {
   let counter = 0;
 
@@ -145,7 +177,7 @@ export const trajectoryMove = (
   const interval = setInterval(() => {
     const id = vectorToLinear(vector);
     const el = document.getElementById(`id_${id}`);
-    if (el && callback) {
+    if (callback) {
       callback(el, count);
     }
     const x = vector[0] - mathPre * Math.floor(count * 0.25);
@@ -261,14 +293,14 @@ const shimmerSequence = (ele) => {
   }, 100);
 };
 
-export const deleteEverythingButMe = (querySelector = '.cell', ele) => {
+export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
   const all = document.querySelectorAll(querySelector);
   all.forEach((e, i) => {
     setTimeout(() => {
-      if (ele === undefined || ele && e.id !== ele.id ) {
+      if (ele === undefined || (ele && e.id !== ele.id)) {
         e.innerText = "";
-        e.style.background = 'none';
-        e.removeAttribute('hello');
+        e.style.background = "none";
+        e.removeAttribute("hello");
       }
     }, Math.random() * i * 0.5);
   });

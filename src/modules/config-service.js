@@ -1,20 +1,21 @@
 import * as chroma from "chroma-js";
-import {createRandomLandscape, startASCIIExplosion} from "./sequences";
+import { createRandomLandscape, startASCIIExplosion } from "./sequences";
 
 const defaults = {
-    scale: 'skin',
-    shape: 'explosion',
-}
+  scale: "skin",
+  shape: "explosion",
+};
 
-const _scaleMap = {
+export const _scaleMap = {
   skin: chroma.cubehelix().lightness([0, 1]),
   greyscale: chroma.scale(),
-}
+  lulu: chroma.scale(["yellow", "navy"]).mode("lch"),
+};
 
-const _shapesMap = {
+export const _shapesMap = {
   landscape: createRandomLandscape,
   explosion: startASCIIExplosion,
-}
+};
 
 class CanvasConfig {
   constructor(configObj = defaults) {
@@ -22,7 +23,7 @@ class CanvasConfig {
   }
 
   updateConfig(configObj) {
-    this._configObj = {...this._configObj, ...configObj};
+    this._configObj = { ...this._configObj, ...configObj };
   }
 
   getScale() {
@@ -36,7 +37,6 @@ class CanvasConfig {
   getConfig() {
     return this._configObj;
   }
-
 }
 
 export default CanvasConfig;

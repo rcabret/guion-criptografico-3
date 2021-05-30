@@ -9,7 +9,7 @@ const defaults = {
   cellHeight: 14,
   cellSelector: "cell",
   canvasId: "content",
-  container: "body",
+  container: 'body'
 };
 
 export class MatrixCanvas {
@@ -21,7 +21,7 @@ export class MatrixCanvas {
       window.innerWidth / (configObj.cellWidth + configObj.borderWidth * 2)
     );
     this.numOfRows = Math.floor(
-      (window.innerHeight - 100) /
+      (window.innerHeight - 120) /
         (configObj.cellHeight + configObj.borderWidth * 2)
     );
     this.cellCount = Math.floor(this.rowLength * this.numOfRows);
@@ -33,22 +33,19 @@ export class MatrixCanvas {
     backdrop.className = "backdrop";
 
     body.appendChild(this._parentElement);
-    body.append(backdrop);
+    //body.append(backdrop);
 
     this._parentElement.innerHTML = "";
 
     const {
       cellWidth,
       cellHeight,
-      cellSelector,
       borderWidth,
       borderColor,
     } = this._config;
 
     for (let i = 0; i < this.cellCount; i++) {
       const node = document.createElement("span");
-
-      node.className = cellSelector;
       //const [x, y] = LinearToVector(i);
       node.id = `id_${i}`;
       node.style.width = `${cellWidth}px`;

@@ -15,20 +15,21 @@ import {
   trajectoryMove,
   createRandomLandscape,
   deleteEverythingButMe,
-  startASCIILoader,
 } from "./modules/sequences";
 
-import * as chroma from "chroma-js";
 import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
+import { handleConfigChange } from "./modules/key-reader";
 
 let cellCount;
 let terminal;
 let canvas;
 let config = new CanvasConfig();
-const scale = config.getScale();
+//let scale = config.getScale();
 
 const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
+  let scale = config.getScale();
+
   const initialElement = !element
     ? getElementViaPosition(Math.floor(randomNumber(0, cellCount)))
     : element;
@@ -36,15 +37,20 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
   // Get direction of crawl based on codecArray differential value.
   const direction = codecArray[tracker] > 0 ? 1 : -1;
 
-  const onStep = (el, i) => {
-    if (el.hasAttribute("hello")) {
-      let visited = parseFloat(el.getAttribute("hello"));
-      let newScale = visited + 0.02;
-      el.setAttribute("hello", newScale);
-    } else {
-      el.setAttribute("hello", 0);
-      el.classList.add("grow");
-      el.style.background = scale(i / 20);
+  const step = (el, i) => {
+    try {
+      if (el.hasAttribute("hello")) {
+        let visited = parseFloat(el.getAttribute("hello"));
+        let newScale = visited + 0.02;
+        el.setAttribute("hello", newScale);
+      } else {
+        el.setAttribute("hello", 0);
+        el.classList.add("grow");
+        //el.style.background = scale(i / 20);
+        //el.style.background = "#F8E2DAFF";
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -64,6 +70,11 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
       };
 
       // Mark point of recursion start
+      /**
+       * TODO: No need for this callback. Dont do this too flexible
+       * choose a couple of cool mutations and work with randomizing the
+       * crawler or color scales. Work smart! MVP MVP
+       */
       config.getShape()(el, callback);
       //startASCIIExplosion(el, 5, callback);
 
@@ -71,20 +82,20 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
         el,
         (e, i) => {
           setTimeout(() => {
-            //e.classList.add("grow");
             if (!e.hasAttribute("hello")) {
+              //e.classList.add("grow");
               e.style.background = scale(i / 10);
             }
           }, i * 50);
         },
-        0.5,
+        1,
         0,
-        35
+        10
       );
     }
   };
 
-  trajectoryMove(initialElement, direction, 15, onStep, onEnd, 50);
+  trajectoryMove(initialElement, direction, 15, step, onEnd, 50);
 };
 
 const main = async () => {
@@ -109,6 +120,13 @@ main().then(() => {
         return;
       }
       const value = terminal.getInputValue();
+
+      // Handling config change
+      if (value.includes("config")) {
+        handleConfigChange(value, config, terminal);
+        return;
+      }
+
       switch (value) {
         case "change":
           config.updateConfig({ shape: "explosion" });
@@ -158,7 +176,7 @@ main().then(() => {
           el.style.background = "blue";
         }, i * 30);
       },
-      1,
+      0.5,
       0,
       10
     );

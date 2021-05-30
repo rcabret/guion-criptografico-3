@@ -154,6 +154,10 @@ export const getElementFromVector = (vector) => {
   return getElementViaPosition(a);
 };
 
+export const getVectorFromElement = (el) => {
+
+}
+
 /** Debounce for later **/
 export const debounce = (func, wait, immediate) => {
   let timeout;

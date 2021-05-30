@@ -12,9 +12,9 @@
 }
 
 .backdrop {
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   width: 50vw;
-  height: 100vh;
+  height: calc(100vh);
   position: absolute;
   top: 0;
   z-index: 1;
@@ -27,7 +27,7 @@ body {
   background: white;
 }
 
-#content {
+pre {
   margin-left: auto;
   margin-right: auto;
   font-size: 0.8rem;
@@ -39,7 +39,7 @@ body {
   top: 0;
 }
 
-.cell {
+pre span {
   font-size: 1rem;
   display: inline-flex;
   float: left;
@@ -56,8 +56,8 @@ body {
   overflow: hidden;
 }
 
-.cell:hover,
-.cell.active {
+pre span:hover,
+pre span.active {
   opacity: 1;
   background: hotpink;
 }
@@ -88,7 +88,7 @@ body {
     border-radius: 10%;
     transform: translateY(0);
     border-color: grey;
-    opacity: 0.5;
+    opacity: 0.8;
   }
 }
 
@@ -116,7 +116,7 @@ body {
   letter-spacing: 1.2px;
   padding: 10px;
   border-top: 1px solid #f9f9f9;
-  font-size: 14px;
+  font-size: 16px;
   overflow-y: scroll;
 }
 
