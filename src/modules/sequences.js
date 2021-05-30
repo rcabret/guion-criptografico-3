@@ -1,8 +1,5 @@
 import {
-  getNeighborsByStep,
-  move,
   getIndex,
-  getRing,
   getElementViaPosition,
   getPositionInMatrix,
   LinearToVector,
@@ -11,8 +8,9 @@ import {
   randomNumber,
   getElementFromVector,
   getVectorFromElement,
-  getOtherNeighbor,
-  getEveryOtherNeighborsByStep, getRingTwo,
+  getEveryOtherNeighborsByStep,
+  getRingTwo,
+  getRing,
 } from "./utils.js";
 import { MatrixCanvas, text2 } from "./canvas";
 
@@ -63,13 +61,23 @@ export const startASCIIExplosion = (
   let counter = 0;
   const step = () => {
     counter++;
-    getEveryOtherNeighborsByStep(
-      ele,
-      counter,
-      loopCount,
-      callback,
-      onEndCallback
-    );
+    const arr = getEveryOtherNeighborsByStep(ele, counter);
+
+    // Loop over coordinates
+    arr.forEach((v) => {
+      const ele = getElementFromVector(v);
+      if (!ele) {
+        return;
+      }
+      // Execute every step
+      callback(ele);
+
+      // Execute at the end of all steps
+      if (counter >= loopCount && onEndCallback) {
+        onEndCallback(ele);
+      }
+    });
+
     if (counter >= loopCount) {
       clearInterval(interval);
     }
@@ -79,16 +87,15 @@ export const startASCIIExplosion = (
 };
 
 export const drawRing = (ele, step, callback) => {
-  const coordinates = getRingTwo(ele, step);
+  const coordinates = getRing(ele, step);
 
-  coordinates.forEach((v,i) => {
+  coordinates.forEach((v, i) => {
     if (v.length && i > 0) {
       const ele = getElementFromVector(v);
-      if (!ele) {
-        return;
+      if (ele && callback) {
+        // Execute every step
+        callback(ele, i);
       }
-      // Execute every step
-      callback(ele, i);
     }
   });
 };
@@ -137,8 +144,9 @@ export const trajectoryMove = (
       callback(el, count);
     }
     //TODO: Revise this movement
-    const x = vector[0] - mathPre * Math.floor(count * 0.25);
-    const y = vector[1] - mathPre * Math.round(Math.random());
+    let [x, y] = vector;
+    x = x - mathPre * Math.floor(count * 0.25);
+    y = y - mathPre * Math.round(Math.random());
     vector = [x, y];
     count++;
 

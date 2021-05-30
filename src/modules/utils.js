@@ -12,16 +12,11 @@ import { MatrixCanvas } from "./canvas.js";
 
 const canvas = new MatrixCanvas();
 const rowLength = canvas.getRowLength();
+const rows = canvas.getNumOfRows();
 
-export const getEveryOtherNeighborsByStep = (
-  el,
-  step,
-  loopCount,
-  callback,
-  onEndCallback
-) => {
+export const getEveryOtherNeighborsByStep = (el, step) => {
   const [x, y] = getVectorFromElement(el);
-  const arr = [
+  return [
     [x, y + step],
     [x + step, y + step],
     [x + step, y],
@@ -31,21 +26,6 @@ export const getEveryOtherNeighborsByStep = (
     [x - step, y],
     [x - step, y + step],
   ];
-
-  arr.forEach((v) => {
-    if (v && v.length) {
-      const ele = getElementFromVector(v);
-      if (!ele) {
-        return;
-      }
-      // Execute every step
-      callback(ele);
-      // Execute at the end of all steps
-      if (step === loopCount && onEndCallback) {
-        onEndCallback(ele);
-      }
-    }
-  });
 };
 
 /**
@@ -54,7 +34,7 @@ export const getEveryOtherNeighborsByStep = (
  * @param radius
  * @returns {*[]}
  */
-export const getRingTwo = (ele, radius) => {
+export const getRing = (ele, radius) => {
   const [x, y] = getVectorFromElement(ele);
   const equations = [
     [0, 1],
@@ -65,7 +45,7 @@ export const getRingTwo = (ele, radius) => {
   const perimeter = radius * 8;
   let cornerCounter = 0;
   let sP = [[x + radius, y - radius]];
-
+  console.log("sP", sP[0]);
   getElementFromVector(sP[0]).style.background = "red";
 
   for (let i = 0; i < perimeter - 1; i++) {
@@ -119,24 +99,27 @@ export const LinearToVector = (pos) => {
   return [x, y];
 };
 
-export const getPositionInMatrix = (ele) => {
-  if (!ele) {
-    return;
+const _normalize = (number, max) => {
+  if (number > max && number > 0) {
+    return Math.abs(number - max);
+  } else if (number < 0) {
+    return Math.abs(max + number);
+  } else {
+    return number;
   }
-  return Number(ele.id.replace("id_", ""));
 };
 
-export const getElementViaPosition = (position) =>
-  document.getElementById(`id_${position}`);
-
 export const getElementFromVector = (vector) => {
-  const a = vectorToLinear(vector);
-  return getElementViaPosition(a);
+  let [x, y] = vector;
+  x = _normalize(x, rowLength);
+  y = _normalize(y, rows);
+  return document.getElementById(`${x}_${y}`);
 };
 
 export const getVectorFromElement = (el) => {
-  const a = getPositionInMatrix(el);
-  return LinearToVector(a);
+  const id = el.id;
+  let [x, y] = id.split("_");
+  return [parseInt(x), parseInt(y)];
 };
 
 /** Debounce for later **/

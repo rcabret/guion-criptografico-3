@@ -5,6 +5,7 @@ import {
   randomNumber,
   buildAndGetDispatchingArray,
   getRing,
+  getElementFromVector,
 } from "./modules/utils";
 
 import { MatrixCanvas } from "./modules/canvas.js";
@@ -24,9 +25,7 @@ import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
 import { handleConfigChange } from "./modules/key-reader";
 
-let cellCount;
-let terminal;
-let canvas;
+let canvas, terminal, numOfRows, rowLength;
 let config = new CanvasConfig();
 //let scale = config.getScale();
 
@@ -34,10 +33,13 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
   const scale = config.getScale();
 
   const initialElement = !element
-    ? getElementViaPosition(Math.floor(randomNumber(0, cellCount)))
+    ? getElementFromVector([
+        Math.floor(randomNumber(0, rowLength - 1)),
+        Math.floor(randomNumber(0, numOfRows - 1)),
+      ])
     : element;
 
-  initialElement.style.background = 'red';
+  initialElement.style.background = "red";
 
   const step = (el, i) => {
     try {
@@ -85,7 +87,8 @@ const main = async () => {
     // Creating canvas matrix and terminal
     canvas = new MatrixCanvas();
     canvas.init();
-    cellCount = canvas.getCellCount();
+    rowLength = canvas.getRowLength();
+    numOfRows = canvas.getNumOfRows();
     terminal = new Terminal();
     terminal.init();
   });
@@ -147,7 +150,7 @@ main().then(() => {
 
   // Click event
   document.addEventListener("click", (e) => {
-    drawRing(e.target, 1, (e) => {
+    drawRing(e.target, 10, (e) => {
       e.style.background = "blue";
     });
     return;
