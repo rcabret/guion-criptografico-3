@@ -2,7 +2,6 @@ import {
   createRandomLandscape,
   drawRing,
   startASCIIExplosion,
-  startASCIILoader,
 } from "../sequences";
 
 export const one = (el, scale) => {

@@ -15,13 +15,12 @@ import {
   trajectoryMove,
   createRandomLandscape,
   deleteEverythingButMe,
-  drawRing,
 } from "./modules/sequences";
 
 import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
 import { handleConfigChange } from "./modules/key-reader";
-import {three, two} from "./modules/shapes/shapes";
+import { three } from "./modules/shapes/shapes";
 
 let canvas, terminal, numOfRows, rowLength;
 let config = new CanvasConfig();
