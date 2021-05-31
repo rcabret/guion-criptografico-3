@@ -1,7 +1,5 @@
 import {
   getIndex,
-  getElementViaPosition,
-  getPositionInMatrix,
   LinearToVector,
   vectorToLinear,
   getCharsMap,
@@ -9,7 +7,6 @@ import {
   getElementFromVector,
   getVectorFromElement,
   getEveryOtherNeighborsByStep,
-  getRingTwo,
   getRing,
 } from "./utils.js";
 import { MatrixCanvas, text2 } from "./canvas";
