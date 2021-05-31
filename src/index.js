@@ -38,7 +38,7 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
 
   initialElement.style.background = "red";
 
-  const step = (el, i) => {
+  const step = (el) => {
     try {
       if (el.hasAttribute("hello")) {
         let visited = parseFloat(el.getAttribute("hello"));
@@ -46,7 +46,7 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
         el.setAttribute("hello", newScale);
       } else {
         el.setAttribute("hello", 0);
-        el.classList.add("grow");
+        //el.classList.add("grow");
         //el.style.background = scale(i / 20);
         el.style.background = "#F8E2DAFF";
       }

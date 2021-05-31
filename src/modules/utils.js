@@ -45,8 +45,8 @@ export const getRing = (ele, radius) => {
   const perimeter = radius * 8;
   let cornerCounter = 0;
   let sP = [[x + radius, y - radius]];
-  console.log("sP", sP[0]);
-  getElementFromVector(sP[0]).style.background = "red";
+
+  //getElementFromVector(sP[0]).style.background = "red";
 
   for (let i = 0; i < perimeter - 1; i++) {
     const [x, y] = equations[cornerCounter];

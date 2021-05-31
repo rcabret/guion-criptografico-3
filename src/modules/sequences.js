@@ -274,7 +274,7 @@ export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
 export const createRandomLandscape = (
   el,
   callback,
-  ratio = 1,
+  ratio = () => {},
   amplitude = 0,
   range = 10
 ) => {
