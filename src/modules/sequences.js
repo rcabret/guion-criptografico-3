@@ -21,8 +21,8 @@ const loadingString = "-/|\\";
 /** Element mutations **/
 export const startASCIILoader = (
   ele,
-  loopCount = 60,
-  time = 100,
+  loopCount = 6,
+  time = 20,
   onEndCallback
 ) => {
   let i = 1;
@@ -70,11 +70,11 @@ export const startASCIIExplosion = (
         return;
       }
       // Execute every step
-      callback(ele);
+      callback(ele, counter);
 
       // Execute at the end of all steps
       if (counter >= loopCount && onEndCallback) {
-        onEndCallback(ele);
+        onEndCallback(ele, counter);
       }
     });
 

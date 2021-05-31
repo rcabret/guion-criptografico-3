@@ -2,6 +2,7 @@ import {
   createRandomLandscape,
   drawRing,
   startASCIIExplosion,
+  startASCIILoader,
 } from "../sequences";
 
 export const one = (el, scale) => {
@@ -40,5 +41,11 @@ export const two = (ele, scale) => {
 };
 
 export const three = (ele, scale) => {
-  startASCIIExplosion(ele);
+  const step = (e) => {
+    e.style.background = 'blue';
+  };
+  const end = (el) => {
+    startASCIIExplosion(el, step, null, null, 5);
+  };
+  startASCIIExplosion(ele, step, end, null, 14);
 };

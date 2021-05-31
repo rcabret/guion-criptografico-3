@@ -11,8 +11,8 @@
 import { MatrixCanvas } from "./canvas.js";
 
 const canvas = new MatrixCanvas();
-const rowLength = canvas.getRowLength();
-const rows = canvas.getNumOfRows();
+const max_x = canvas.getRowLength();
+const max_y = canvas.getNumOfRows();
 
 export const getEveryOtherNeighborsByStep = (el, step) => {
   const [x, y] = getVectorFromElement(el);
@@ -52,7 +52,6 @@ export const getRing = (ele, radius) => {
     const [x, y] = equations[cornerCounter];
     const [newX, newY] = sP[i];
     sP.push([newX + x, newY + y]);
-
     cornerCounter =
       (i + 1) % (radius * 2) === 0 ? cornerCounter + 1 : cornerCounter;
   }
@@ -90,29 +89,19 @@ export const checkForNeighbors = (cp, clickHistoryArray) => {
  * @returns {*}
  */
 export const vectorToLinear = ([x, y]) => {
-  return y * rowLength + x;
+  return y * max_x + x;
 };
 
 export const LinearToVector = (pos) => {
-  const y = Math.floor(pos / rowLength);
-  const x = pos < rowLength ? pos : Math.floor(pos - rowLength * y);
+  const y = Math.floor(pos / max_x);
+  const x = pos < max_x ? pos : Math.floor(pos - max_x * y);
   return [x, y];
-};
-
-const _normalize = (number, max) => {
-  if (number > max && number > 0) {
-    return Math.abs(number - max);
-  } else if (number < 0) {
-    return Math.abs(max + number);
-  } else {
-    return number;
-  }
 };
 
 export const getElementFromVector = (vector) => {
   let [x, y] = vector;
-  x = _normalize(x, rowLength);
-  y = _normalize(y, rows);
+  x = _normalize(x, max_x);
+  y = _normalize(y, max_y);
   return document.getElementById(`${x}_${y}`);
 };
 
@@ -120,23 +109,6 @@ export const getVectorFromElement = (el) => {
   const id = el.id;
   let [x, y] = id.split("_");
   return [parseInt(x), parseInt(y)];
-};
-
-/** Debounce for later **/
-export const debounce = (func, wait, immediate) => {
-  let timeout;
-  return () => {
-    let context = this;
-    let args = this.arguments;
-    let later = function () {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    let callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
 };
 
 export const getCharsMap = (str, start) => {
@@ -163,6 +135,17 @@ export const areClose = (ele, secondEle) => {
     const perimeter = getRing(secondEle, 2);
     const currentPosition = getVectorFromElement(ele);
     return perimeter.includes(currentPosition);
+  }
+};
+
+
+const _normalize = (number, max) => {
+  if (number > max && number > 0) {
+    return Math.abs(number - max);
+  } else if (number < 0) {
+    return Math.abs(max + number);
+  } else {
+    return number;
   }
 };
 

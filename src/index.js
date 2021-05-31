@@ -21,10 +21,10 @@ import {
 import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
 import { handleConfigChange } from "./modules/key-reader";
+import {three, two} from "./modules/shapes/shapes";
 
 let canvas, terminal, numOfRows, rowLength;
 let config = new CanvasConfig();
-//let scale = config.getScale();
 
 const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
   const scale = config.getScale();
@@ -147,9 +147,7 @@ main().then(() => {
 
   // Click event
   document.addEventListener("click", (e) => {
-    drawRing(e.target, 10, (e) => {
-      e.style.background = "blue";
-    });
+    three(e.target);
     return;
     createRandomLandscape(
       e.target,
