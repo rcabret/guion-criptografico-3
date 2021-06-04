@@ -1,9 +1,9 @@
 import * as chroma from "chroma-js";
-import { one, three, two } from "./shapes/shapes";
+import {four, none, one, three, two} from "./shapes/shapes";
 
 const defaults = {
   scale: "skin",
-  shape: "one",
+  shape: "four",
 };
 
 export const _scaleMap = {
@@ -16,6 +16,8 @@ export const _shapesMap = {
   one: one,
   two: two,
   three: three,
+  four: four,
+  none: none,
 };
 
 class CanvasConfig {

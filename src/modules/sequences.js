@@ -268,33 +268,78 @@ export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
   });
 };
 
-export const createRandomLandscape = (
+const defaultRatio = (x) => {
+  return x;
+};
+
+export const createGraph = (
   el,
   callback,
-  ratio = () => {},
+  ratio = defaultRatio,
   amplitude = 0,
-  range = 10
+  range = 10,
+  tracker = 0,
+  stagger = 0
 ) => {
-  let vector = getVectorFromElement(el);
+  // Make local copies of coordinates
+  const [x, y] = getVectorFromElement(el);
+  if (callback && el) {
+    callback(el, tracker);
+  }
 
-  for (let i = 0; i < range; i++) {
-    const ele = getElementFromVector(vector);
-    let [x, y] = vector;
+  const mutation = Math.floor(ratio(tracker)) + amplitude;
+  const vector = [x, y];
 
-    if (callback && ele) {
-      callback(ele, i);
+  for (let j = 0; j < Math.abs(mutation); j++) {
+    // what direction is the coordinate in
+    vector[1] = mutation < 0 ? ++vector[1] : --vector[1];
+    const mutationEle = getElementFromVector(vector);
+    // Step for mutation
+    if (callback && mutationEle) {
+      callback(mutationEle, j);
     }
+  }
 
-    const mutation = Math.floor(i * ratio + amplitude);
-    for (let j = 0; j < mutation; j++) {
-      vector[1] = --vector[1];
-      const newEl = getElementFromVector(vector);
-      if (callback && newEl) {
-        callback(newEl, j);
-      }
-    }
-
+  if (tracker + 1 <= range) {
     // Move x one to the right
-    vector = [x + 1, y];
+    const nextEle = getElementFromVector([x + 1, y]);
+    setTimeout(() => {
+      createGraph(nextEle, callback, ratio, amplitude, range, tracker + 1);
+    }, stagger);
+  }
+};
+
+export const createCircle = (
+  ele,
+  radius,
+  callback,
+  tracker = 0,
+  stagger = 0
+) => {
+  let [x, y] = getVectorFromElement(ele);
+
+  // Make local copies of center coordinates
+  x = tracker === 0 ? x - radius : x;
+
+  const x2 = Math.pow(tracker - radius, 2);
+  const r2 = Math.pow(radius, 2);
+  const result = Math.abs(r2 - x2);
+  const mutation = Math.round(Math.sqrt(result));
+
+  const vector = [x, y - mutation];
+
+  for (let i = 0; i < mutation * 2; i++) {
+    vector[1] = ++vector[1];
+    const mutationEle = getElementFromVector(vector);
+    if (callback && mutationEle) {
+      callback(mutationEle, i);
+    }
+  }
+
+  if (tracker < radius * 2) {
+    const newEle = getElementFromVector([x + 1, y]);
+    setTimeout(() => {
+      createCircle(newEle, radius, callback, tracker + 1, stagger);
+    }, stagger);
   }
 };

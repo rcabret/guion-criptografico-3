@@ -140,7 +140,7 @@ export const areClose = (ele, secondEle) => {
 
 
 const _normalize = (number, max) => {
-  if (number > max && number > 0) {
+  if (number > max - 1 && number > 0) {
     return Math.abs(number - max);
   } else if (number < 0) {
     return Math.abs(max + number);

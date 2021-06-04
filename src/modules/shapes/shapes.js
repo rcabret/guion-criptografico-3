@@ -1,5 +1,6 @@
 import {
-  createRandomLandscape,
+  createCircle,
+  createGraph,
   drawRing,
   startASCIIExplosion,
 } from "../sequences";
@@ -8,24 +9,25 @@ export const one = (el, scale) => {
   const callback = (el) => {
     el.style.background = "#F8E2DAFF";
   };
-
   // First action
   startASCIIExplosion(el, callback);
 
+  const graphFunc = (x) => Math.cos(x / 2) * 10;
+
   // Second action
-  createRandomLandscape(
+  createGraph(
     el,
     (e, i) => {
       setTimeout(() => {
         if (!e.hasAttribute("hello")) {
-          e.classList.add("grow");
           e.style.background = scale(i / 10);
         }
       }, i * 50);
     },
-    1,
+    graphFunc,
     0,
-    20
+    8,
+      -8,
   );
 };
 
@@ -41,10 +43,30 @@ export const two = (ele, scale) => {
 
 export const three = (ele, scale) => {
   const step = (e) => {
-    e.style.background = 'blue';
+    e.style.background = "blue";
   };
   const end = (el) => {
-    startASCIIExplosion(el, step, null, null, 5);
+    startASCIIExplosion(el, step, null, null, 8);
   };
-  startASCIIExplosion(ele, step, end, null, 14);
+  startASCIIExplosion(ele, step, end, null, 20);
 };
+
+export const four = (ele, scale) => {
+  const radius = 5;
+
+  const callback = (e, i) => {
+    setTimeout(() => {
+      e.style.background = scale(i / (radius * 2.5));
+    }, i * 10);
+  };
+
+  const callback2 = (el) => {
+    el.style.background = "#F8E2DAFF";
+  };
+  // First action
+  startASCIIExplosion(ele, callback2);
+
+  createCircle(ele, radius, callback, undefined, 10);
+};
+
+export const none = (ele, scale) => {};

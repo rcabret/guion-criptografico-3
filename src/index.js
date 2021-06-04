@@ -13,19 +13,19 @@ import Sha256 from "crypto-js/sha256";
 
 import {
   trajectoryMove,
-  createRandomLandscape,
   deleteEverythingButMe,
+  createGraph,
+  createCircle,
 } from "./modules/sequences";
 
 import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
 import { handleConfigChange } from "./modules/key-reader";
-import { three } from "./modules/shapes/shapes";
 
 let canvas, terminal, numOfRows, rowLength;
 let config = new CanvasConfig();
 
-const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
+const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
   const scale = config.getScale();
 
   const initialElement = !element
@@ -35,7 +35,7 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
       ])
     : element;
 
-  initialElement.style.background = "red";
+  initialElement.style.background = "orange";
 
   const step = (el) => {
     try {
@@ -45,7 +45,7 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
         el.setAttribute("hello", newScale);
       } else {
         el.setAttribute("hello", 0);
-        //el.classList.add("grow");
+        el.classList.add("grow");
         //el.style.background = scale(i / 20);
         el.style.background = "#F8E2DAFF";
       }
@@ -55,7 +55,15 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
   };
 
   const onEnd = (el) => {
-    //el.style.background = "red";
+    // el.style.background = "red";
+
+    // Update terminal progress
+    terminal.updateLastCommand(
+      `> creating composition from ciphertext: ${Math.round(
+        ((tracker) / cipherChar) * 100
+      )}%`
+    );
+
     // Recursion is DONE
     if (tracker === codecArray.length - 1) {
       terminal.addStringToCommandHistory(`> done creating composition`);
@@ -63,19 +71,18 @@ const encryptionSequence = (cipherChar, codecArray, element, tracker = 0) => {
     }
 
     // Recursion continues
-    if (codecArray[tracker + 1] !== undefined) {
-      // Recursion point
-      encryptionSequence("a", codecArray, el, tracker + 1);
-
+    if (tracker + 1 <= cipherChar) {
       // But draw some stuff
       config.getShape()(el, scale);
+      // Recursion point
+      encryptionSequence(el, codecArray, cipherChar, tracker + 1);
     }
   };
 
   // Get direction of crawl based on codecArray differential value.
   const direction = codecArray[tracker] > 0 ? 1 : -1;
 
-  trajectoryMove(initialElement, direction, 15, step, onEnd, 50);
+  trajectoryMove(initialElement, direction, 15, step, onEnd, 0);
 };
 
 const main = async () => {
@@ -92,6 +99,7 @@ const main = async () => {
 
 main().then(() => {
   // Key down event
+  // Listens to keyboard, typing
   window.addEventListener("keydown", (e) => {
     if (e.code === "Space" && e.target === document.body) {
       e.preventDefault();
@@ -102,7 +110,7 @@ main().then(() => {
       }
       const value = terminal.getInputValue();
 
-      // Handling config change
+      // Handling config change, matching flag symbols
       if (value.includes("--")) {
         handleConfigChange(value, config, terminal);
         return;
@@ -117,27 +125,31 @@ main().then(() => {
           // Clear and reset canvas matrix
           terminal.addExecutedCommandToHistory(value);
           terminal.addStringToCommandHistory("> reset complete");
-
           canvas.init();
           break;
         default:
-          terminal.addExecutedCommandToHistory(value);
+          terminal.addExecutedCommandToHistory(
+            `<span style="background: white; color: black;">${value}</span>`
+          );
 
+          // Let's encrypt some shit
           if (value.length) {
             const passPhrase = Sha256("temp_passphrase");
             const encrypted = AES.encrypt(value, passPhrase.toString());
             terminal.addStringToCommandHistory(
               `> aes-chipertext: ${encrypted}`
             );
+
             terminal.addStringToCommandHistory(
-              `> creating composition from ciphertext...`
+              "> creating composition from ciphertext"
             );
+
             const codecArray = buildAndGetDispatchingArray(
               encrypted.toString()
             );
 
             // Get first
-            encryptionSequence(passPhrase[0], codecArray);
+            encryptionSequence(undefined, codecArray, value.split(" ").length);
           }
           break;
       }
@@ -146,18 +158,26 @@ main().then(() => {
 
   // Click event
   document.addEventListener("click", (e) => {
-    three(e.target);
+    const scale = config.getScale();
     return;
-    createRandomLandscape(
+    createGraph(
       e.target,
       (el, i) => {
         setTimeout(() => {
           el.style.background = "blue";
         }, i * 30);
       },
-      0.5,
+      undefined,
       0,
-      10
+      20,
+      -20
     );
+
+    const radius = 12;
+    createCircle(e.target, radius, (e, i) => {
+      setTimeout(() => {
+        e.style.background = scale(i / (radius * 2.5));
+      }, 0);
+    });
   });
 });

@@ -34,21 +34,25 @@ class Terminal {
     return this._getInputElement().value;
   }
 
-  addStringToCommandHistory(string) {
+  addStringToCommandHistory(string, highlight = false) {
     const input = this._getInputElement();
     input.value = "";
     input.focus();
 
     const history = document.getElementById("command-history");
     const li = document.createElement("li");
-    const textNode = document.createTextNode(string);
-    li.appendChild(textNode);
+    li.innerHTML = string;
     history.appendChild(li);
     this._scrollToBottom();
   }
 
   addExecutedCommandToHistory(string) {
     this.addStringToCommandHistory(`${this.terminalName} ${string}`);
+  }
+
+  updateLastCommand(string) {
+    const history = document.getElementById("command-history");
+    history.lastChild.innerHTML = string;
   }
 
   toggleInputLine() {
