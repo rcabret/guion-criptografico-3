@@ -1,17 +1,15 @@
-import {LinearToVector} from "./utils";
-
-export const text1 = "Hola yo soy un text que quiere aparecer en el screen";
-export const text2 = "Pensé...     que me querias";
+import { LinearToVector } from "./utils";
 
 const defaults = {
   borderColor: "#f9f9f9",
-  //borderColor: "#031E57FF",
+  //borderColor: "#031E57FF",x
   borderWidth: 1,
   cellWidth: 14,
   cellHeight: 14,
   cellSelector: "cell",
   canvasId: "content",
-  container: 'body'
+  container: "body",
+  terminalHeight: 150,
 };
 
 export class MatrixCanvas {
@@ -23,7 +21,7 @@ export class MatrixCanvas {
       window.innerWidth / (configObj.cellWidth + configObj.borderWidth * 2)
     );
     this.numOfRows = Math.floor(
-      (window.innerHeight - 120) /
+      (window.innerHeight - this._config.terminalHeight) /
         (configObj.cellHeight + configObj.borderWidth * 2)
     );
     this.cellCount = Math.floor(this.rowLength * this.numOfRows);
@@ -39,25 +37,21 @@ export class MatrixCanvas {
 
     this._parentElement.innerHTML = "";
 
-    const {
-      cellWidth,
-      cellHeight,
-      borderWidth,
-      borderColor,
-    } = this._config;
+    const { cellWidth, cellHeight, borderWidth, borderColor } = this._config;
 
     for (let i = 0; i < this.cellCount; i++) {
       const node = document.createElement("span");
       const [x, y] = LinearToVector(i);
-      node.id = `${x}_${y}`
-      node.style.width = `${cellWidth}px`;
-      node.style.height = `${cellHeight}px`;
-      if (this._config.borderWidth > 0) {
-        node.style.border = `${borderWidth}px solid ${borderColor}`;
-      }
-
-      //node.innerHTML = "&nbsp;";
-
+      node.id = `${x}_${y}`;
+      const styles = {
+        width: `${cellWidth}px`,
+        height: `${cellHeight}px`,
+        border:
+          this._config.borderWidth > 0
+            ? `${borderWidth}px solid ${borderColor}`
+            : "none",
+      };
+      Object.assign(node.style, styles);
       this._parentElement.append(node);
     }
   }

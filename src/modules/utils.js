@@ -68,21 +68,6 @@ export const getIndex = (idx, len) => {
   return idx + 1 < len ? idx + 1 : 0;
 };
 
-let lastClicked = [];
-export const neighborAwareClick = (e) => {
-  if (e) {
-    const ele = e.target;
-    const cp = Number(ele.id.replace("id_", ""));
-    lastClicked.push(cp);
-  }
-};
-
-export const checkForNeighbors = (cp, clickHistoryArray) => {
-  clickHistoryArray.forEach((e) => {
-    /* if(cp > )*/
-  });
-};
-
 /**
  *
  * @param a
@@ -123,21 +108,6 @@ export const randomNumber = (min, max) => {
   return Math.random() * (max - min) + min;
 };
 
-/**
- * Checks if ele is at a certain perimeter from secondEle
- *
- * @param ele
- * @param secondEle
- * @returns {boolean}
- */
-export const areClose = (ele, secondEle) => {
-  if (secondEle !== undefined) {
-    const perimeter = getRing(secondEle, 2);
-    const currentPosition = getVectorFromElement(ele);
-    return perimeter.includes(currentPosition);
-  }
-};
-
 
 const _normalize = (number, max) => {
   if (number > max - 1 && number > 0) {
@@ -153,7 +123,6 @@ export const buildAndGetDispatchingArray = (encryptedHashString) => {
   if (!encryptedHashString.length) {
     return;
   }
-  //encryptedHashArray.reduce(())
 
   let outputArray = [];
   const encryptionArray = encryptedHashString.split("");

@@ -1,9 +1,10 @@
 class Terminal {
-  constructor() {
+  constructor(terminalHeight = 150) {
     this.body = document.querySelector("body");
     this.terminalParent = document.createElement("aside");
     this.terminalParent.id = "terminal";
     this.terminalName = "cabret$";
+    this.terminalParent.style.height = `${terminalHeight}px`;
   }
 
   init() {
@@ -34,7 +35,7 @@ class Terminal {
     return this._getInputElement().value;
   }
 
-  addStringToCommandHistory(string, highlight = false) {
+  addStringToCommandHistory(string) {
     const input = this._getInputElement();
     input.value = "";
     input.focus();

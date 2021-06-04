@@ -60,13 +60,13 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     // Update terminal progress
     terminal.updateLastCommand(
       `> creating composition from ciphertext: ${Math.round(
-        ((tracker) / cipherChar) * 100
+        (tracker / cipherChar) * 100
       )}%`
     );
 
     // Recursion is DONE
-    if (tracker === codecArray.length - 1) {
-      terminal.addStringToCommandHistory(`> done creating composition`);
+    if (tracker === cipherChar) {
+      // terminal.addStringToCommandHistory(`> done creating composition`);
       return;
     }
 
@@ -89,10 +89,10 @@ const main = async () => {
   document.addEventListener("DOMContentLoaded", () => {
     // Creating canvas matrix and terminal
     canvas = new MatrixCanvas();
-    canvas.init();
+    canvas.init({ terminalHeight: 200 });
     rowLength = canvas.getRowLength();
     numOfRows = canvas.getNumOfRows();
-    terminal = new Terminal();
+    terminal = new Terminal(200);
     terminal.init();
   });
 };
@@ -129,7 +129,7 @@ main().then(() => {
           break;
         default:
           terminal.addExecutedCommandToHistory(
-            `<span style="background: white; color: black;">${value}</span>`
+            `<span style="background: white; color: black; font-weight: 900">${value}</span>`
           );
 
           // Let's encrypt some shit
@@ -137,7 +137,7 @@ main().then(() => {
             const passPhrase = Sha256("temp_passphrase");
             const encrypted = AES.encrypt(value, passPhrase.toString());
             terminal.addStringToCommandHistory(
-              `> aes-chipertext: ${encrypted}`
+              `> aes-chipertext: <span style="color: red; font-weight: 900; font-style: italic">${encrypted}</span>`
             );
 
             terminal.addStringToCommandHistory(
