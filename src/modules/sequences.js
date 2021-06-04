@@ -1,18 +1,12 @@
 import {
   getIndex,
-  LinearToVector,
-  vectorToLinear,
-  getCharsMap,
   randomNumber,
   getElementFromVector,
   getVectorFromElement,
   getEveryOtherNeighborsByStep,
   getRing,
 } from "./utils.js";
-import { MatrixCanvas, text2 } from "./canvas";
 
-const canvas = new MatrixCanvas();
-const rowLength = canvas.getRowLength();
 const loadingString = "-/|\\";
 
 /** Element mutations **/
@@ -27,7 +21,7 @@ export const startASCIILoader = (
 
   const step = () => {
     counter++;
-    //e.target.innerText = string.charAt(Math.floor(Math.random() * string.length));
+
     if (ele === undefined) {
       return;
     }
@@ -97,23 +91,6 @@ export const drawRing = (ele, step, callback) => {
   });
 };
 
-export const expandRing = (ele, startingPoint, loopCount, speed) => {
-  let i = startingPoint;
-  const interval = setInterval(() => {
-    i++;
-    drawRing(ele, i, (e) => {
-      ele.style.color = "#ebc4ca";
-      e.innerText = "tu";
-    });
-    drawRing(ele, i - 1, (e) => {
-      e.innerText = "";
-    });
-    if (i === startingPoint + loopCount) {
-      clearInterval(interval);
-    }
-  }, speed);
-};
-
 export const trajectoryMove = (
   ele,
   trajectory,
@@ -154,105 +131,6 @@ export const trajectoryMove = (
       }
     }
   }, time);
-};
-
-let c = 0;
-export const trappedInSquare = (ele) => {
-  //e.target.innerText = loadingString[0];
-  //e.target.classList.add('active');
-
-  let timer;
-  c++;
-  clearTimeout(timer);
-  timer = setTimeout(() => {
-    c = 0;
-  }, 500);
-  if (c > 1 && c < 4) {
-    expandRing(ele, 4, 10, 50);
-    startASCIILoader(ele, 4, 50);
-  }
-  if (c > 5) {
-    expandRing(ele, 1, 10, 50);
-  }
-  ele.style.color = "#4274eb";
-  ele.innerText = "yo";
-
-  drawRing(ele, 1, (el) => {
-    //ele.style.color = '#ebc4ca';
-    el.innerText = "tu";
-  });
-
-  drawRing(ele, 2, (el) => {
-    //ele.style.color = '#ebc4ca';
-    el.innerText = "tu";
-  });
-
-  drawRing(ele, 7, (el) => {
-    //ele.style.color = '#ebc4ca';
-    el.innerText = "tu";
-  });
-};
-
-/** Entire matrix mutations*/
-export const glitch = (querySelector) => {
-  const all = document.querySelectorAll(querySelector);
-  all.forEach((e, i) => {
-    setTimeout(() => {
-      e.innerHTML = "|";
-      e.style.color = "#edb367";
-      setTimeout(() => {
-        e.style.color = "violet";
-        e.innerHTML = "-";
-      }, 400);
-      setTimeout(() => {
-        e.innerHTML = " ";
-      }, 600);
-      setTimeout(() => {
-        e.style.color = "#faf9ac";
-      }, Math.random() * 1000);
-      setTimeout(() => {
-        e.style.color = "#edb367";
-      }, Math.random() * 1000);
-    }, Math.random() * i * 0.1);
-  });
-};
-
-/**
- * Traverses the screen uses random bezier paths
- *
- * @param ele
- */
-const shimmerSequence = (ele) => {
-  const charsArr = getCharsMap(text2, 700);
-  const loopCount = rowLength;
-  const pos = getPositionInMatrix(ele);
-  let v = LinearToVector(pos);
-  let count = 0;
-  let int = setInterval(() => {
-    const cp = vectorToLinear(v);
-    const el = getElementViaPosition(cp);
-    const len = Math.floor(Math.random() * 20);
-    trajectoryMove(el, null, len, (e) => {
-      e.style.color = "white";
-      startASCIILoader(e, 8, 10, (elj) => {
-        elj.style.color = "violet";
-        elj.innerHTML = "-";
-        setTimeout(() => {
-          startASCIILoader(elj, 4, 50, (ey) => {
-            ey.style.color = "blue";
-            const pos = getPositionInMatrix(ey);
-            const t = charsArr["id_" + pos] ? charsArr["id_" + pos] : "";
-            ey.innerHTML = t;
-          });
-        }, 1500);
-      });
-    });
-    v[0] = v[0] + 1;
-    count++;
-    if (count > loopCount) {
-      clearInterval(int);
-    }
-  }, 100);
 };
 
 export const deleteEverythingButMe = (querySelector = "pre span", ele) => {

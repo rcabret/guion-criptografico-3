@@ -101,10 +101,8 @@ main().then(() => {
   // Key down event
   // Listens to keyboard, typing
   window.addEventListener("keydown", (e) => {
-    if (e.code === "Space" && e.target === document.body) {
-      e.preventDefault();
-    }
     if (e.code === "Enter") {
+      // On Enter
       if (!terminal) {
         return;
       }
@@ -118,6 +116,7 @@ main().then(() => {
 
       switch (value) {
         case "clear":
+          // Clears background styles of all matrix
           terminal.addExecutedCommandToHistory(value);
           deleteEverythingButMe();
           break;
@@ -128,27 +127,34 @@ main().then(() => {
           canvas.init();
           break;
         default:
-          terminal.addExecutedCommandToHistory(
-            `<span style="background: white; color: black; font-weight: 900">${value}</span>`
-          );
-
           // Let's encrypt some shit
           if (value.length) {
+            // Write highlighted input text into terminal command history
+            terminal.addExecutedCommandToHistory(
+              `<span style="background: white; color: black; font-weight: 900">${value}</span>`
+            );
+
             const passPhrase = Sha256("temp_passphrase");
             const encrypted = AES.encrypt(value, passPhrase.toString());
+
+            // Write highlighted ciphertext into terminal command history
             terminal.addStringToCommandHistory(
               `> aes-chipertext: <span style="color: red; font-weight: 900; font-style: italic">${encrypted}</span>`
             );
 
+            // Create process text node to be updated with percentage during recursive crawling
+            // See above `encryptionSequence` -> `end` callback
             terminal.addStringToCommandHistory(
               "> creating composition from ciphertext"
             );
 
+            // Build and get crawler data array
+            // Used to move the crawler in the matrix
             const codecArray = buildAndGetDispatchingArray(
               encrypted.toString()
             );
 
-            // Get first
+            // Start encryption crawler recursion
             encryptionSequence(undefined, codecArray, value.split(" ").length);
           }
           break;
