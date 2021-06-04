@@ -16,6 +16,8 @@ import {
   deleteEverythingButMe,
   createGraph,
   createCircle,
+  startASCIILoader,
+  startASCIIExplosion,
 } from "./modules/sequences";
 
 import Terminal from "./modules/terminal";
@@ -165,20 +167,6 @@ main().then(() => {
   // Click event
   document.addEventListener("click", (e) => {
     const scale = config.getScale();
-    return;
-    createGraph(
-      e.target,
-      (el, i) => {
-        setTimeout(() => {
-          el.style.background = "blue";
-        }, i * 30);
-      },
-      undefined,
-      0,
-      20,
-      -20
-    );
-
     const radius = 12;
     createCircle(e.target, radius, (e, i) => {
       setTimeout(() => {

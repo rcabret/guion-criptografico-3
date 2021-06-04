@@ -46,9 +46,9 @@ export const three = (ele, scale) => {
     e.style.background = "blue";
   };
   const end = (el) => {
-    startASCIIExplosion(el, step, null, null, 8);
+    startASCIIExplosion(el, step, null, 8 );
   };
-  startASCIIExplosion(ele, step, end, null, 20);
+  startASCIIExplosion(ele, step, end, 20);
 };
 
 export const four = (ele, scale) => {

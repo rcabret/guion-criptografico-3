@@ -42,39 +42,31 @@ export const startASCIIExplosion = (
   ele,
   callback,
   onEndCallback,
-  onStartCallback,
-  loopCount = 5
+  loopCount = 5,
+  stagger = 50
 ) => {
-  if (onStartCallback) {
-    onStartCallback(ele);
-  }
-
-  let counter = 0;
-  const step = () => {
-    counter++;
-    const arr = getEveryOtherNeighborsByStep(ele, counter);
+  const step = (i) => {
+    const arr = getEveryOtherNeighborsByStep(ele, i);
 
     // Loop over coordinates
     arr.forEach((v) => {
       const ele = getElementFromVector(v);
-      if (!ele) {
-        return;
-      }
+
       // Execute every step
-      callback(ele, counter);
+      callback(ele, i);
 
       // Execute at the end of all steps
-      if (counter >= loopCount && onEndCallback) {
-        onEndCallback(ele, counter);
+      if (i >= loopCount - 1 && onEndCallback) {
+        onEndCallback(ele, i);
       }
     });
-
-    if (counter >= loopCount) {
-      clearInterval(interval);
-    }
   };
 
-  const interval = setInterval(step, 50);
+  for (let i = 0; i < loopCount; i++) {
+    setTimeout(() => {
+      step(i);
+    }, i * stagger);
+  }
 };
 
 export const drawRing = (ele, step, callback) => {
