@@ -14,10 +14,7 @@ import Sha256 from "crypto-js/sha256";
 import {
   trajectoryMove,
   deleteEverythingButMe,
-  createGraph,
   createCircle,
-  startASCIILoader,
-  startASCIIExplosion,
 } from "./modules/sequences";
 
 import Terminal from "./modules/terminal";
@@ -47,7 +44,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
         el.setAttribute("hello", newScale);
       } else {
         el.setAttribute("hello", 0);
-        el.classList.add("grow");
+        //el.classList.add("grow");
         //el.style.background = scale(i / 20);
         el.style.background = "#F8E2DAFF";
       }
@@ -73,18 +70,20 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     }
 
     // Recursion continues
-    if (tracker + 1 <= cipherChar) {
+    if (tracker + 1 < cipherChar) {
       // But draw some stuff
       config.getShape()(el, scale);
       // Recursion point
       encryptionSequence(el, codecArray, cipherChar, tracker + 1);
+    } else {
+      config.getShape()(el, scale);
     }
   };
 
   // Get direction of crawl based on codecArray differential value.
   const direction = codecArray[tracker] > 0 ? 1 : -1;
 
-  trajectoryMove(initialElement, direction, 15, step, onEnd, 0);
+  trajectoryMove(initialElement, step, onEnd, direction);
 };
 
 const main = async () => {

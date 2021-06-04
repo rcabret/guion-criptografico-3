@@ -3,7 +3,7 @@ import {four, none, one, three, two} from "./shapes/shapes";
 
 const defaults = {
   scale: "skin",
-  shape: "four",
+  shape: "none",
 };
 
 export const _scaleMap = {

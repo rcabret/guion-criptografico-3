@@ -85,17 +85,16 @@ export const drawRing = (ele, step, callback) => {
 
 export const trajectoryMove = (
   ele,
-  trajectory,
-  loopCount,
   callback,
   onEndCallback,
+  trajectory,
+  loopCount = 15,
   time = 30
 ) => {
-  let count = 0;
   let mathPre;
   let vector = getVectorFromElement(ele);
 
-  // So ghetto
+  // So ghetto ()setup
   if (trajectory) {
     mathPre = trajectory;
   } else {
@@ -103,26 +102,30 @@ export const trajectoryMove = (
       mathPre = Math.round(randomNumber(-1, 2));
     } while (mathPre === 0);
   }
-  // ghetto
-  const interval = setInterval(() => {
+
+  // Execute every step
+  const step = (i) => {
     const el = getElementFromVector(vector);
-    if (el && callback) {
-      callback(el, count);
+    if (callback) {
+      callback(el, i);
     }
     //TODO: Revise this movement
     let [x, y] = vector;
-    x = x - mathPre * Math.floor(count * 0.25);
+    x = x - mathPre * Math.floor(i * 0.25);
     y = y - mathPre * Math.round(Math.random());
     vector = [x, y];
-    count++;
 
-    if (count > loopCount) {
-      clearInterval(interval);
-      if (onEndCallback) {
-        onEndCallback(el, count);
-      }
+    if (i === loopCount - 1 && onEndCallback) {
+      onEndCallback(el, i);
     }
-  }, time);
+  };
+
+  // Iteration
+  for (let i = 0; i < loopCount; i++) {
+    setTimeout(() => {
+      step(i);
+    }, i * time);
+  }
 };
 
 export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
