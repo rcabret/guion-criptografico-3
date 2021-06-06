@@ -2,22 +2,18 @@ import "assets/main.css";
 
 import {
   randomNumber,
-  getElementFromVector,
-  getVectorFromElement,
+  getElementFromVector
 } from "./modules/utils";
 
 import { MatrixCanvas } from "./modules/canvas.js";
 
-import {
-  createCircle,
-} from "./modules/sequences";
 
 import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
 import { handleConfigChange, handleKeyPress } from "./modules/key-reader";
 
+const config = new CanvasConfig();
 let canvas, terminal, numOfRows, rowLength;
-let config = new CanvasConfig();
 
 const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
   const scale = config.getScale();
@@ -28,8 +24,6 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
         Math.floor(randomNumber(0, numOfRows - 1)),
       ])
     : element;
-
-  initialElement.style.background = "orange";
 
   const step = (el) => {
     try {
@@ -118,27 +112,6 @@ main().then(() => {
 
   // Click event
   document.addEventListener("click", (e) => {
-    const scale = config.getScale();
-    const radius = 4;
-    let [x, y] = getVectorFromElement(e.target);
-
-    for (let i = 0; i < 10; i++) {
-      setTimeout(() => {
-        const e = getElementFromVector([(x += 5), y]);
-        createCircle(e, radius, (e, i) => {
-          setTimeout(() => {
-            e.style.background = scale(i / (radius * 2.5));
-
-            setTimeout(() => {
-              e.style.background = "lightblue";
-            }, 200);
-
-            setTimeout(() => {
-              e.style.background = "transparent";
-            }, 400);
-          }, i * 10);
-        });
-      }, i * 100);
-    }
+    // Do something
   });
 });

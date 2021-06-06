@@ -4,7 +4,6 @@ import {
   getElementFromVector,
   getVectorFromElement,
   getEveryOtherNeighborsByStep,
-  getRing,
   getSquareCoordinates,
 } from "./utils.js";
 

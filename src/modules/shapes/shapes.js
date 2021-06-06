@@ -82,6 +82,7 @@ export const trackerOne = (el, scale) => {
 
   const radius = 5;
   createCircle(el, radius, (e, i) => {
+    el.classList.add('scale');
 
     setTimeout(() => {
       e.style.background = scale(i / (radius * 2.5));
