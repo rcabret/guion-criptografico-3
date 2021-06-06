@@ -2,25 +2,19 @@ import "assets/main.css";
 
 import {
   randomNumber,
-  buildAndGetDispatchingArray,
   getElementFromVector,
   getVectorFromElement,
 } from "./modules/utils";
 
 import { MatrixCanvas } from "./modules/canvas.js";
 
-import AES from "crypto-js/aes";
-import Sha256 from "crypto-js/sha256";
-
 import {
-  trajectoryMove,
-  deleteEverythingButMe,
   createCircle,
 } from "./modules/sequences";
 
 import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
-import { handleConfigChange } from "./modules/key-reader";
+import { handleConfigChange, handleKeyPress } from "./modules/key-reader";
 
 let canvas, terminal, numOfRows, rowLength;
 let config = new CanvasConfig();
@@ -117,51 +111,8 @@ main().then(() => {
         return;
       }
 
-      switch (value) {
-        case "clear":
-          // Clears background styles of all matrix
-          terminal.addExecutedCommandToHistory(value);
-          deleteEverythingButMe();
-          break;
-        case "reset":
-          // Clear and reset canvas matrix
-          terminal.addExecutedCommandToHistory(value);
-          terminal.addStringToCommandHistory("> reset complete");
-          canvas.init();
-          break;
-        default:
-          // Let's encrypt some shit
-          if (value.length) {
-            // Write highlighted input text into terminal command history
-            terminal.addExecutedCommandToHistory(
-              `<span style="background: white; color: black; font-weight: 900">${value}</span>`
-            );
-
-            const passPhrase = Sha256("temp_passphrase");
-            const encrypted = AES.encrypt(value, passPhrase.toString());
-
-            // Write highlighted ciphertext into terminal command history
-            terminal.addStringToCommandHistory(
-              `> aes-chipertext: <span style=" font-style: italic">${encrypted}</span>`
-            );
-
-            // Create process text node to be updated with percentage during recursive crawling
-            // See above `encryptionSequence` -> `end` callback
-            terminal.addStringToCommandHistory(
-              "> creating composition from ciphertext"
-            );
-
-            // Build and get crawler data array
-            // Used to move the crawler in the matrix
-            const codecArray = buildAndGetDispatchingArray(
-              encrypted.toString()
-            );
-
-            // Start encryption crawler recursion
-            encryptionSequence(undefined, codecArray, value.split(" ").length);
-          }
-          break;
-      }
+      // Handling the rest of key press
+      handleKeyPress(value, canvas, terminal, encryptionSequence);
     }
   });
 

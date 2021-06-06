@@ -1,3 +1,6 @@
+/**
+ * Terminal component
+ */
 class Terminal {
   constructor(terminalHeight = 150) {
     this.body = document.querySelector("body");
