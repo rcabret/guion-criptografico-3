@@ -1,9 +1,23 @@
 import * as chroma from "chroma-js";
-import {four, none, one, three, two} from "./shapes/shapes";
+import {
+  four,
+  growBlue,
+  none,
+  one,
+  three,
+  trackerOne,
+  two,
+} from "./shapes/shapes";
+import { trajectoryMove } from "./sequences";
+
+const shapeDefaults = {
+  step: none,
+  tracker: trajectoryMove,
+};
 
 const defaults = {
   scale: "skin",
-  shape: "none",
+  shape: "paint",
 };
 
 export const _scaleMap = {
@@ -13,11 +27,12 @@ export const _scaleMap = {
 };
 
 export const _shapesMap = {
-  one: one,
-  two: two,
-  three: three,
-  four: four,
-  none: none,
+  one: { ...shapeDefaults, step: growBlue, end: one },
+  two: { ...shapeDefaults, end: two },
+  three: { ...shapeDefaults, end: three },
+  four: { ...shapeDefaults, end: four },
+  paint: { ...shapeDefaults, step: trackerOne },
+  none: { ...shapeDefaults },
 };
 
 class CanvasConfig {
@@ -33,8 +48,16 @@ class CanvasConfig {
     return _scaleMap[this._configObj.scale];
   }
 
-  getShape() {
-    return _shapesMap[this._configObj.shape];
+  getEnd() {
+    return _shapesMap[this._configObj.shape].end;
+  }
+
+  getStep() {
+    return _shapesMap[this._configObj.shape].step;
+  }
+
+  getTracker() {
+    return _shapesMap[this._configObj.shape].tracker;
   }
 }
 

@@ -66,7 +66,33 @@ export const four = (ele, scale) => {
   // First action
   startASCIIExplosion(ele, callback2);
 
-  createCircle(ele, radius, callback, undefined, 10);
+  //createCircle(ele, radius, callback, undefined, 10);
 };
 
 export const none = (ele, scale) => {};
+
+export const growBlue = (el) => {
+
+  el.style.background = "#F8E2DAFF";
+  el.classList.add('grow');
+}
+
+export const trackerOne = (el, scale) => {
+  el.style.background = "#F8E2DAFF";
+
+  const radius = 5;
+  createCircle(el, radius, (e, i) => {
+
+    setTimeout(() => {
+      e.style.background = scale(i / (radius * 2.5));
+
+      setTimeout(() => {
+        e.style.background = "lightblue";
+      }, 200);
+
+      setTimeout(() => {
+        e.style.background = scale(i / (radius * 2.5));
+      }, 400);
+    }, i * 10);
+  });
+}

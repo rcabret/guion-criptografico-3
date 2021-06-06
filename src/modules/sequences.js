@@ -9,7 +9,13 @@ import {
 
 const loadingString = "-/|\\";
 
-/** Element mutations **/
+/**
+ *
+ * @param ele
+ * @param loopCount
+ * @param time
+ * @param onEndCallback
+ */
 export const startASCIILoader = (
   ele,
   loopCount = 6,
@@ -38,6 +44,14 @@ export const startASCIILoader = (
   const interval = setInterval(step, time);
 };
 
+/**
+ *
+ * @param ele
+ * @param callback
+ * @param onEndCallback
+ * @param loopCount
+ * @param stagger
+ */
 export const startASCIIExplosion = (
   ele,
   callback,
@@ -69,6 +83,12 @@ export const startASCIIExplosion = (
   }
 };
 
+/**
+ *
+ * @param ele
+ * @param step
+ * @param callback
+ */
 export const drawRing = (ele, step, callback) => {
   const coordinates = getRing(ele, step);
 
@@ -83,6 +103,15 @@ export const drawRing = (ele, step, callback) => {
   });
 };
 
+/**
+ *
+ * @param ele
+ * @param callback
+ * @param onEndCallback
+ * @param trajectory
+ * @param loopCount
+ * @param time
+ */
 export const trajectoryMove = (
   ele,
   callback,
@@ -128,6 +157,11 @@ export const trajectoryMove = (
   }
 };
 
+/**
+ *
+ * @param querySelector
+ * @param ele
+ */
 export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
   const all = document.querySelectorAll(querySelector);
   all.forEach((e, i) => {
@@ -140,11 +174,25 @@ export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
     }, Math.random() * i * 0.5);
   });
 };
-
+/**
+ *
+ * @param x
+ * @returns {*}
+ */
 const defaultRatio = (x) => {
   return x;
 };
 
+/**
+ *
+ * @param el
+ * @param callback
+ * @param ratio
+ * @param amplitude
+ * @param range
+ * @param tracker
+ * @param stagger
+ */
 export const createGraph = (
   el,
   callback,
@@ -182,37 +230,39 @@ export const createGraph = (
   }
 };
 
-export const createCircle = (
-  ele,
-  radius,
-  callback,
-  tracker = 0,
-  stagger = 0
-) => {
+/**
+ *
+ * @param ele
+ * @param radius
+ * @param callback
+ * @param stagger
+ */
+export const createCircle = (ele, radius, callback, stagger = 30) => {
   let [x, y] = getVectorFromElement(ele);
 
-  // Make local copies of center coordinates
-  x = tracker === 0 ? x - radius : x;
+  // Initial x-coordinate
+  x = x - radius;
 
-  const x2 = Math.pow(tracker - radius, 2);
-  const r2 = Math.pow(radius, 2);
-  const result = Math.abs(r2 - x2);
-  const mutation = Math.round(Math.sqrt(result));
+  const step = (i) => {
+    const x2 = Math.pow(i - radius, 2);
+    const r2 = Math.pow(radius, 2);
+    const result = Math.abs(r2 - x2);
+    const mutation = Math.round(Math.sqrt(result));
 
-  const vector = [x, y - mutation];
+    const vector = [++x, y - mutation];
 
-  for (let i = 0; i < mutation * 2; i++) {
-    vector[1] = ++vector[1];
-    const mutationEle = getElementFromVector(vector);
-    if (callback && mutationEle) {
-      callback(mutationEle, i);
+    for (let i = 0; i < mutation * 2; i++) {
+      vector[1] = ++vector[1];
+      const mutationEle = getElementFromVector(vector);
+      if (callback && mutationEle) {
+        callback(mutationEle, i);
+      }
     }
-  }
+  };
 
-  if (tracker < radius * 2) {
-    const newEle = getElementFromVector([x + 1, y]);
+  for (let i = 0; i < radius * 2; i++) {
     setTimeout(() => {
-      createCircle(newEle, radius, callback, tracker + 1, stagger);
-    }, stagger);
+      step(i);
+    }, i * stagger);
   }
 };

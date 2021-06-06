@@ -1,19 +1,15 @@
-/**
- *
- * @param ele
- * @param step
- * @param loopCount
- * @param callback
- * @param onEndCallback
- *s
- * TODO: Will accept a 'neighborStepCallback,  change callback to 'onEndCallback'
- */
 import { MatrixCanvas } from "./canvas.js";
 
 const canvas = new MatrixCanvas();
 const max_x = canvas.getRowLength();
 const max_y = canvas.getNumOfRows();
 
+/**
+ *
+ * @param el
+ * @param step
+ * @returns {((number|*)[]|*[]|(*|number)[]|(*|number)[]|(number|number)[])[]}
+ */
 export const getEveryOtherNeighborsByStep = (el, step) => {
   const [x, y] = getVectorFromElement(el);
   return [
@@ -46,8 +42,6 @@ export const getRing = (ele, radius) => {
   let cornerCounter = 0;
   let sP = [[x + radius, y - radius]];
 
-  //getElementFromVector(sP[0]).style.background = "red";
-
   for (let i = 0; i < perimeter - 1; i++) {
     const [x, y] = equations[cornerCounter];
     const [newX, newY] = sP[i];
@@ -58,7 +52,10 @@ export const getRing = (ele, radius) => {
   return sP;
 };
 
-/** Misc Utils  **/
+/**
+ *
+ * @returns {string}
+ */
 export const getRandomASCII = () => {
   const random_ascii = Math.floor(Math.random() * 25 + 97);
   return String.fromCharCode(random_ascii);
@@ -77,12 +74,23 @@ export const vectorToLinear = ([x, y]) => {
   return y * max_x + x;
 };
 
+/**
+ *
+ * @param pos
+ * @returns {[(*|number), number]}
+ * @constructor
+ */
 export const LinearToVector = (pos) => {
   const y = Math.floor(pos / max_x);
   const x = pos < max_x ? pos : Math.floor(pos - max_x * y);
   return [x, y];
 };
 
+/**
+ *
+ * @param vector
+ * @returns {HTMLElement}
+ */
 export const getElementFromVector = (vector) => {
   let [x, y] = vector;
   x = _normalize(x, max_x);
@@ -90,25 +98,34 @@ export const getElementFromVector = (vector) => {
   return document.getElementById(`${x}_${y}`);
 };
 
+/**
+ *
+ * @param el
+ * @returns {[number, number]}
+ */
 export const getVectorFromElement = (el) => {
   const id = el.id;
   let [x, y] = id.split("_");
   return [parseInt(x), parseInt(y)];
 };
 
-export const getCharsMap = (str, start) => {
-  let map = {};
-  for (let i = 0; i < str.length; i++) {
-    map["id_" + (i + start)] = str.charAt(i);
-  }
-  return map;
-};
-
+/**
+ *
+ * @param min
+ * @param max
+ * @returns {*}
+ */
 export const randomNumber = (min, max) => {
   return Math.random() * (max - min) + min;
 };
 
-
+/**
+ *
+ * @param number
+ * @param max
+ * @returns {number|*}
+ * @private
+ */
 const _normalize = (number, max) => {
   if (number > max - 1 && number > 0) {
     return Math.abs(number - max);
@@ -119,6 +136,11 @@ const _normalize = (number, max) => {
   }
 };
 
+/**
+ *
+ * @param encryptedHashString
+ * @returns {*[] | undefined}
+ */
 export const buildAndGetDispatchingArray = (encryptedHashString) => {
   if (!encryptedHashString.length) {
     return;

@@ -4,6 +4,7 @@ import {
   randomNumber,
   buildAndGetDispatchingArray,
   getElementFromVector,
+  getVectorFromElement,
 } from "./modules/utils";
 
 import { MatrixCanvas } from "./modules/canvas.js";
@@ -44,9 +45,11 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
         el.setAttribute("hello", newScale);
       } else {
         el.setAttribute("hello", 0);
-        //el.classList.add("grow");
-        //el.style.background = scale(i / 20);
-        el.style.background = "#F8E2DAFF";
+
+        // Tracker draw
+        if (typeof config.getStep() === "function") {
+          config.getStep()(el, scale);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -54,8 +57,6 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
   };
 
   const onEnd = (el) => {
-    // el.style.background = "red";
-
     // Update terminal progress
     terminal.updateLastCommand(
       `> creating composition from ciphertext: ${Math.round(
@@ -65,25 +66,26 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
 
     // Recursion is DONE
     if (tracker === cipherChar) {
-      // terminal.addStringToCommandHistory(`> done creating composition`);
-      return;
+      terminal.addStringToCommandHistory(`> done creating composition`);
     }
 
     // Recursion continues
-    if (tracker + 1 < cipherChar) {
-      // But draw some stuff
-      config.getShape()(el, scale);
+    if (tracker + 1 <= cipherChar) {
+      // But draw some stuff if config has something to draw
+      if (typeof config.getEnd() === "function") {
+        config.getEnd()(el, scale);
+      }
       // Recursion point
       encryptionSequence(el, codecArray, cipherChar, tracker + 1);
-    } else {
-      config.getShape()(el, scale);
     }
   };
 
   // Get direction of crawl based on codecArray differential value.
   const direction = codecArray[tracker] > 0 ? 1 : -1;
 
-  trajectoryMove(initialElement, step, onEnd, direction);
+  if (typeof config.getTracker() === "function") {
+    config.getTracker()(initialElement, step, onEnd, direction);
+  }
 };
 
 const main = async () => {
@@ -140,7 +142,7 @@ main().then(() => {
 
             // Write highlighted ciphertext into terminal command history
             terminal.addStringToCommandHistory(
-              `> aes-chipertext: <span style="color: red; font-weight: 900; font-style: italic">${encrypted}</span>`
+              `> aes-chipertext: <span style=" font-style: italic">${encrypted}</span>`
             );
 
             // Create process text node to be updated with percentage during recursive crawling
@@ -166,11 +168,26 @@ main().then(() => {
   // Click event
   document.addEventListener("click", (e) => {
     const scale = config.getScale();
-    const radius = 12;
-    createCircle(e.target, radius, (e, i) => {
+    const radius = 4;
+    let [x, y] = getVectorFromElement(e.target);
+
+    for (let i = 0; i < 10; i++) {
       setTimeout(() => {
-        e.style.background = scale(i / (radius * 2.5));
-      }, 0);
-    });
+        const e = getElementFromVector([(x += 5), y]);
+        createCircle(e, radius, (e, i) => {
+          setTimeout(() => {
+            e.style.background = scale(i / (radius * 2.5));
+
+            setTimeout(() => {
+              e.style.background = "lightblue";
+            }, 200);
+
+            setTimeout(() => {
+              e.style.background = "transparent";
+            }, 400);
+          }, i * 10);
+        });
+      }, i * 100);
+    }
   });
 });
