@@ -1,7 +1,7 @@
 import {
   createCircle,
   createGraph,
-  drawRing,
+  drawSquareOutline,
   startASCIIExplosion,
 } from "../sequences";
 
@@ -34,7 +34,7 @@ export const one = (el, scale) => {
 export const two = (ele, scale) => {
   for (let i = 1; i < 30; i++) {
     setTimeout(() => {
-      drawRing(ele, i, (e) => {
+      drawSquareOutline(ele, i, (e) => {
         e.style.background = scale(i * 0.05);
       });
     }, i * 20);

@@ -30,7 +30,7 @@ export const getEveryOtherNeighborsByStep = (el, step) => {
  * @param radius
  * @returns {*[]}
  */
-export const getRing = (ele, radius) => {
+export const getSquareCoordinates = (ele, radius) => {
   const [x, y] = getVectorFromElement(ele);
   const equations = [
     [0, 1],

@@ -5,6 +5,7 @@ import {
   getVectorFromElement,
   getEveryOtherNeighborsByStep,
   getRing,
+  getSquareCoordinates,
 } from "./utils.js";
 
 const loadingString = "-/|\\";
@@ -89,8 +90,8 @@ export const startASCIIExplosion = (
  * @param step
  * @param callback
  */
-export const drawRing = (ele, step, callback) => {
-  const coordinates = getRing(ele, step);
+export const drawSquareOutline = (ele, step, callback) => {
+  const coordinates = getSquareCoordinates(ele, step);
 
   coordinates.forEach((v, i) => {
     if (v.length && i > 0) {
