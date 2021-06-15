@@ -1,15 +1,24 @@
 import { LinearToVector } from "./utils";
 
-const defaults = {
+const darkMode = {
+  background: "black",
+  borderColor: "#031E57FF",
+};
+
+const lightMode = {
+  background: "white",
   borderColor: "#f9f9f9",
-  //borderColor: "#031E57FF",x
+};
+
+const defaults = {
   borderWidth: 1,
-  cellWidth: 14,
-  cellHeight: 14,
+  cellWidth: 16, // 14 default
+  cellHeight: 16, // 14 default
   cellSelector: "cell",
   canvasId: "content",
   container: "body",
   terminalHeight: 150,
+  ...lightMode,
 };
 
 export class MatrixCanvas {
@@ -29,6 +38,7 @@ export class MatrixCanvas {
 
   init() {
     const body = document.querySelector("body");
+    body.style.background = this._config.background;
     const backdrop = document.createElement("div");
     backdrop.className = "backdrop";
 
@@ -54,6 +64,27 @@ export class MatrixCanvas {
       Object.assign(node.style, styles);
       this._parentElement.append(node);
     }
+  }
+
+  toggleDarkMode(dark = false) {
+    const newMode = dark ? darkMode : lightMode;
+    this._config = { ...this._config, ...newMode };
+    const body = document.querySelector("body");
+    const cells = document.querySelector("pre span");
+
+    body.style.background = this._config.background;
+
+    cells.forEach((ele) => {
+      ele.style.borderColor = this._config.borderColor;
+    });
+  }
+
+  toggleGrid(hide = false) {
+    const cells = document.querySelector("pre span");
+    const borderColor = hide ? "transparent" : this._config.borderColor;
+    cells.forEach((ele) => {
+      ele.style.borderColor = borderColor;
+    });
   }
 
   getRowLength() {

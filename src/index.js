@@ -17,6 +17,7 @@ let canvas, terminal, numOfRows, rowLength;
 
 const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
   const scale = config.getScale();
+  console.log('ee', config.getConfig());
 
   const initialElement = !element
     ? getElementFromVector([

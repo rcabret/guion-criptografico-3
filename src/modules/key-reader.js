@@ -1,7 +1,8 @@
 import { _scaleMap, _shapesMap } from "./config-service";
-import { deleteEverythingButMe } from "./sequences";
+import { deleteEverythingButMe, trajectoryMove } from "./sequences";
 import Sha256 from "crypto-js/sha256";
 import AES from "crypto-js/aes";
+import { ends, scales, steps } from "./shapes/shapes-maps";
 
 import { buildAndGetDispatchingArray } from "./utils";
 
@@ -19,17 +20,47 @@ export const handleConfigChange = (inputValue, config, terminal) => {
     terminal.addExecutedCommandToHistory(inputValue);
     const configValue = configOption.split(" ")[1];
     switch (configOption.split(" ")[0]) {
-      case "scale":
+      case "color":
         if (Object.keys(_scaleMap).includes(configValue)) {
-          config.updateConfig({ scale: configValue });
+          const configObj = {
+            scale: _scaleMap[configValue],
+          };
+          config.updateConfig(configObj);
           terminal.addStringToCommandHistory(`> scale update: ${configValue}`);
         }
         break;
-      case "shape":
+      case "forma":
         if (Object.keys(_shapesMap).includes(configValue)) {
-          config.updateConfig({ shape: configValue });
+          const configObj = {
+            shape: _shapesMap[configValue],
+          };
+          config.updateConfig(configObj);
           terminal.addStringToCommandHistory(`> shape update: ${configValue}`);
         }
+        break;
+      case "dale":
+      case "d":
+        config.updateConfig({
+          //scale: scales[Math.floor(Math.random() * scales.length)],
+          shape: {
+            step: steps[Math.floor(Math.random() * steps.length)],
+            end: ends[Math.floor(Math.random() * ends.length)],
+            tracker: trajectoryMove,
+          },
+        });
+        break;
+      case "dale-duro":
+      case "dd":
+        config.updateConfig({
+          scale: scales[Math.floor(Math.random() * scales.length)],
+          shape: {
+            step: steps[Math.floor(Math.random() * steps.length)],
+            end: ends[Math.floor(Math.random() * ends.length)],
+            tracker: trajectoryMove,
+          },
+        });
+
+      case "sin-grid":
         break;
     }
   }

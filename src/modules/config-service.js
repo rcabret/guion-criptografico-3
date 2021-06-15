@@ -1,23 +1,19 @@
 import * as chroma from "chroma-js";
+
 import {
-  four,
-  growBlue,
-  none,
-  one,
-  three,
-  trackerOne,
-  two,
+  skin_glitch,
+  paint_shimmer,
+  blue,
+  skin_star,
+  star_pattern,
+  squares,
+  dna_star,
 } from "./shapes/shapes";
 import { trajectoryMove } from "./sequences";
 
 const shapeDefaults = {
-  step: none,
+  step: blue,
   tracker: trajectoryMove,
-};
-
-const defaults = {
-  scale: "skin",
-  shape: "paint",
 };
 
 export const _scaleMap = {
@@ -27,12 +23,17 @@ export const _scaleMap = {
 };
 
 export const _shapesMap = {
-  one: { ...shapeDefaults, step: growBlue, end: one },
-  two: { ...shapeDefaults, end: two },
-  three: { ...shapeDefaults, end: three },
-  four: { ...shapeDefaults, end: four },
-  paint: { ...shapeDefaults, step: trackerOne },
+  one: { ...shapeDefaults, step: skin_glitch, end: dna_star },
+  two: { ...shapeDefaults, end: squares },
+  three: { ...shapeDefaults, end: star_pattern },
+  four: { ...shapeDefaults, end: skin_star },
+  paint: { ...shapeDefaults, step: paint_shimmer },
   none: { ...shapeDefaults },
+};
+
+const defaults = {
+  scale: _scaleMap["skin"],
+  shape: _shapesMap["one"],
 };
 
 class CanvasConfig {
@@ -44,20 +45,24 @@ class CanvasConfig {
     this._configObj = { ...this._configObj, ...configObj };
   }
 
+  getConfig() {
+    return this._configObj;
+  }
+
   getScale() {
-    return _scaleMap[this._configObj.scale];
+    return this._configObj.scale;
   }
 
   getEnd() {
-    return _shapesMap[this._configObj.shape].end;
+    return this._configObj.shape.end;
   }
 
   getStep() {
-    return _shapesMap[this._configObj.shape].step;
+    return this._configObj.shape.step;
   }
 
   getTracker() {
-    return _shapesMap[this._configObj.shape].tracker;
+    return this._configObj.shape.tracker;
   }
 }
 

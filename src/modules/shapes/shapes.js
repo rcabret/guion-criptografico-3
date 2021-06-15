@@ -5,7 +5,12 @@ import {
   startASCIIExplosion,
 } from "../sequences";
 
-export const one = (el, scale) => {
+
+/**
+ * ENDS
+ */
+
+export const dna_star = (el, scale) => {
   const callback = (el) => {
     el.style.background = "#F8E2DAFF";
   };
@@ -27,11 +32,11 @@ export const one = (el, scale) => {
     graphFunc,
     0,
     8,
-      -8,
+    -8
   );
 };
 
-export const two = (ele, scale) => {
+export const squares = (ele, scale) => {
   for (let i = 1; i < 30; i++) {
     setTimeout(() => {
       drawSquareOutline(ele, i, (e) => {
@@ -41,49 +46,52 @@ export const two = (ele, scale) => {
   }
 };
 
-export const three = (ele, scale) => {
-  const step = (e) => {
-    e.style.background = "blue";
+export const star_pattern = (ele, scale) => {
+  const step = (e, i) => {
+    e.style.background = scale(i / 10);
   };
   const end = (el) => {
-    startASCIIExplosion(el, step, null, 8 );
+    startASCIIExplosion(el, step, null, 8);
   };
   startASCIIExplosion(ele, step, end, 20);
 };
 
-export const four = (ele, scale) => {
-  const radius = 5;
-
+export const skin_star = (ele, scale) => {
   const callback = (e, i) => {
     setTimeout(() => {
-      e.style.background = scale(i / (radius * 2.5));
+      e.style.background = scale(i / 50);
     }, i * 10);
   };
 
-  const callback2 = (el) => {
-    el.style.background = "#F8E2DAFF";
+  const callback2 = (el, i) => {
+    el.style.background = scale(i / 50);
+    //el.style.background = "#F8E2DAFF";
   };
   // First action
-  startASCIIExplosion(ele, callback2);
-
-  //createCircle(ele, radius, callback, undefined, 10);
+  startASCIIExplosion(ele, callback2, callback);
 };
 
-export const none = (ele, scale) => {};
+/**
+ * STEPS
+ */
 
-export const growBlue = (el) => {
+export const blue = (ele, scale) => {
+  ele.style.background = "lightblue";
+};
 
+export const skin_glitch = (el) => {
   el.style.background = "#F8E2DAFF";
-  el.classList.add('grow');
-}
+  el.classList.add("grow");
+};
 
-export const trackerOne = (el, scale) => {
+export const glitch = (el) => {
+  el.classList.add("grow");
+};
+
+export const paint_shimmer = (el, scale) => {
   el.style.background = "#F8E2DAFF";
-
   const radius = 5;
   createCircle(el, radius, (e, i) => {
-    el.classList.add('scale');
-
     setTimeout(() => {
       e.style.background = scale(i / (radius * 2.5));
 
@@ -96,4 +104,5 @@ export const trackerOne = (el, scale) => {
       }, 400);
     }, i * 10);
   });
-}
+};
+
