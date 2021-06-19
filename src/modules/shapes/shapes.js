@@ -3,12 +3,30 @@ import {
   createGraph,
   drawSquareOutline,
   startASCIIExplosion,
+  startASCIILoader,
 } from "../sequences";
-
 
 /**
  * ENDS
  */
+
+export const triangle = (el, scale) => {
+  const graphFunc = (x) => x;
+  createGraph(
+    el,
+    (e, i) => {
+      setTimeout(() => {
+        if (!e.hasAttribute("hello")) {
+          e.style.background = scale(i / 10);
+        }
+      }, i * 50);
+    },
+    graphFunc,
+    0,
+    8,
+    -8
+  );
+};
 
 export const dna_star = (el, scale) => {
   const callback = (el) => {
@@ -56,6 +74,16 @@ export const star_pattern = (ele, scale) => {
   startASCIIExplosion(ele, step, end, 20);
 };
 
+export const blue_star_pattern = (ele) => {
+  const step = (e, i) => {
+    e.style.background = "blue";
+  };
+  const end = (el) => {
+    startASCIIExplosion(el, step, null, 8);
+  };
+  startASCIIExplosion(ele, step, end, 20);
+};
+
 export const skin_star = (ele, scale) => {
   const callback = (e, i) => {
     setTimeout(() => {
@@ -69,6 +97,13 @@ export const skin_star = (ele, scale) => {
   };
   // First action
   startASCIIExplosion(ele, callback2, callback);
+};
+
+export const ascii_star = (ele, scale) => {
+  const callback = (el, i) => {
+    startASCIILoader(el);
+  };
+  startASCIIExplosion(ele, callback);
 };
 
 /**
@@ -106,3 +141,6 @@ export const paint_shimmer = (el, scale) => {
   });
 };
 
+export const colorStep = (el, scale) => {
+  el.style.background = scale(i / 10);
+}

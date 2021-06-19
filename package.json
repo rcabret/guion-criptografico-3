@@ -24,6 +24,7 @@
     "chroma-js": "^2.1.0",
     "crypto-js": "^4.0.0",
     "css-loader": "^2.1.0",
+    "html2canvas": "^1.0.0-rc.7",
     "prettier": "^2.2.1",
     "style-loader": "^0.23.1"
   }

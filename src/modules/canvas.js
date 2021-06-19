@@ -1,4 +1,5 @@
 import { LinearToVector } from "./utils";
+import { _scaleMap } from "./config-service";
 
 const darkMode = {
   background: "black",
@@ -43,7 +44,7 @@ export class MatrixCanvas {
     backdrop.className = "backdrop";
 
     body.appendChild(this._parentElement);
-    //body.append(backdrop);
+    body.append(backdrop);
 
     this._parentElement.innerHTML = "";
 
@@ -70,19 +71,18 @@ export class MatrixCanvas {
     const newMode = dark ? darkMode : lightMode;
     this._config = { ...this._config, ...newMode };
     const body = document.querySelector("body");
-    const cells = document.querySelector("pre span");
-
+    const cells = document.querySelectorAll("pre span");
     body.style.background = this._config.background;
 
-    cells.forEach((ele) => {
+    cells.forEach((ele, i) => {
       ele.style.borderColor = this._config.borderColor;
     });
   }
 
   toggleGrid(hide = false) {
-    const cells = document.querySelector("pre span");
+    const cells = document.querySelectorAll("pre span");
     const borderColor = hide ? "transparent" : this._config.borderColor;
-    cells.forEach((ele) => {
+    cells.forEach((ele, i) => {
       ele.style.borderColor = borderColor;
     });
   }
@@ -93,5 +93,10 @@ export class MatrixCanvas {
 
   getNumOfRows() {
     return this.numOfRows;
+  }
+
+  toggleBlurLayer(width) {
+    const background = document.querySelector(".backdrop");
+    background.style.width = `${width}vw`;
   }
 }

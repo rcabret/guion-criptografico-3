@@ -33,7 +33,7 @@ export const _shapesMap = {
 
 const defaults = {
   scale: _scaleMap["skin"],
-  shape: _shapesMap["one"],
+  shape: _shapesMap["none"],
 };
 
 class CanvasConfig {
