@@ -1,12 +1,8 @@
 import "assets/main.css";
 
-import {
-  randomNumber,
-  getElementFromVector
-} from "./modules/utils";
+import { randomNumber, getElementFromVector } from "./modules/utils";
 
 import { MatrixCanvas } from "./modules/canvas.js";
-
 
 import Terminal from "./modules/terminal";
 import CanvasConfig from "./modules/config-service";
@@ -17,6 +13,7 @@ let canvas, terminal, numOfRows, rowLength;
 
 const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
   const scale = config.getScale();
+  const alpha = parseFloat(config.getAlpha());
 
   const initialElement = !element
     ? getElementFromVector([
@@ -25,7 +22,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
       ])
     : element;
 
-  const step = (el) => {
+  const step = (el, i) => {
     try {
       if (el.hasAttribute("hello")) {
         let visited = parseFloat(el.getAttribute("hello"));
@@ -36,7 +33,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
 
         // Tracker draw
         if (typeof config.getStep() === "function") {
-          config.getStep()(el, scale);
+          config.getStep()(el, scale, i, alpha);
         }
       }
     } catch (e) {
@@ -44,7 +41,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     }
   };
 
-  const onEnd = (el) => {
+  const onEnd = (el, i) => {
     // Update terminal progress
     terminal.updateLastCommand(
       `> creating composition from ciphertext: ${Math.round(
@@ -61,7 +58,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     if (tracker + 1 <= cipherChar) {
       // But draw some stuff if config has something to draw
       if (typeof config.getEnd() === "function") {
-        config.getEnd()(el, scale);
+        config.getEnd()(el, scale, i, alpha);
       }
       // Recursion point
       encryptionSequence(el, codecArray, cipherChar, tracker + 1);
@@ -98,9 +95,10 @@ main().then(() => {
         return;
       }
       const value = terminal.getInputValue();
+      const wordCount = value.split(" ").length;
 
       // Handling config change, matching flag symbols
-      if (value.includes("--")) {
+      if (value.includes("--") && wordCount <= 2) {
         handleConfigChange(value, config, canvas, terminal);
         return;
       }

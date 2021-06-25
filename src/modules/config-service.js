@@ -8,11 +8,12 @@ import {
   star_pattern,
   squares,
   dna_star,
+  colorStep, ascii_star,
 } from "./shapes/shapes";
 import { trajectoryMove } from "./sequences";
 
 const shapeDefaults = {
-  step: blue,
+  step: colorStep,
   tracker: trajectoryMove,
 };
 
@@ -29,11 +30,13 @@ export const _shapesMap = {
   four: { ...shapeDefaults, end: skin_star },
   paint: { ...shapeDefaults, step: paint_shimmer },
   none: { ...shapeDefaults },
+  lulu: { ...shapeDefaults, end: ascii_star}
 };
 
 const defaults = {
   scale: _scaleMap["skin"],
-  shape: _shapesMap["none"],
+  shape: _shapesMap["lulu"],
+  alpha: 0.3,
 };
 
 class CanvasConfig {
@@ -47,6 +50,10 @@ class CanvasConfig {
 
   getConfig() {
     return this._configObj;
+  }
+
+  getAlpha() {
+    return this._configObj.alpha;
   }
 
   getScale() {

@@ -2,13 +2,16 @@ import {
   ascii_star,
   blue,
   blue_star_pattern,
+  colorStep,
   dna_star,
   glitch,
   paint_shimmer,
   skin_glitch,
   squares,
+  squares_outlines,
   star_pattern,
   triangle,
+  triangle_sine,
 } from "./shapes";
 import { trajectoryMove } from "../sequences";
 import * as chroma from "chroma-js";
@@ -16,14 +19,16 @@ import * as chroma from "chroma-js";
 export const ends = [
   dna_star,
   squares,
-  star_pattern,
+  //star_pattern,
   paint_shimmer,
   ascii_star,
-  blue_star_pattern,
+  //blue_star_pattern,
+  triangle_sine,
   triangle,
+  squares_outlines,
 ];
 
-export const steps = [blue, glitch, skin_glitch, paint_shimmer];
+export const steps = [blue, glitch, skin_glitch, paint_shimmer, colorStep];
 
 export const trackers = [trajectoryMove];
 

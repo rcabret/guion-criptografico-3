@@ -15,7 +15,7 @@ class Terminal {
           <div>
 			<ul id="command-history"></ul>
 			<span id="input-line">
-				${this.terminalName}  <input id="command-input" />
+				${this.terminalName}  <input autocomplete="off" id="command-input" />
 			</span>
 		  </div>`;
 

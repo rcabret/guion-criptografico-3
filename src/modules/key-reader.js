@@ -20,6 +20,14 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
     terminal.addExecutedCommandToHistory(inputValue);
     const configValue = configOption.split(" ")[1];
     switch (configOption.split(" ")[0]) {
+      case "alpha":
+      case "a":
+        if (configValue && !isNaN(configValue)) {
+          let newAlpha = configValue < 0.2 ? 0.2 : configValue;
+          const newConfig = { alpha: newAlpha };
+          config.updateConfig(newConfig);
+        }
+        break;
       case "blur":
       case "b":
         if (configValue && !isNaN(configValue)) {
@@ -100,7 +108,6 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
       case "metele":
       case "m":
         html2canvas(document.querySelector("pre")).then(function (canvas) {
-          console.log("canvas", canvas);
           document.body.appendChild(canvas);
         });
     }
