@@ -19,10 +19,10 @@ import * as chroma from "chroma-js";
 export const ends = [
   dna_star,
   squares,
-  //star_pattern,
+  star_pattern,
   paint_shimmer,
   ascii_star,
-  //blue_star_pattern,
+  blue_star_pattern,
   triangle_sine,
   triangle,
   squares_outlines,
