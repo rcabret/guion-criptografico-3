@@ -76,8 +76,8 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
 const main = async () => {
   document.addEventListener("DOMContentLoaded", () => {
     // Creating canvas matrix and terminal
-    canvas = new MatrixCanvas();
-    canvas.init({ terminalHeight: 200 });
+    canvas = new MatrixCanvas({ terminalHeight: 200 });
+    canvas.init();
     rowLength = canvas.getRowLength();
     numOfRows = canvas.getNumOfRows();
     terminal = new Terminal(200);
@@ -104,7 +104,7 @@ main().then(() => {
       }
 
       // Handling the rest of key press
-      handleKeyPress(value, canvas, terminal, encryptionSequence);
+      handleKeyPress(value, config, canvas, terminal, encryptionSequence);
     }
   });
 

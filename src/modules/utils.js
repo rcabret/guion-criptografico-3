@@ -1,6 +1,6 @@
 import { MatrixCanvas } from "./canvas.js";
 
-const canvas = new MatrixCanvas();
+const canvas = new MatrixCanvas({ terminalHeight: 200 });
 const max_x = canvas.getRowLength();
 const max_y = canvas.getNumOfRows();
 

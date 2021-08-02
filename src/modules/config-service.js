@@ -35,8 +35,10 @@ export const _shapesMap = {
 
 const defaults = {
   scale: _scaleMap["skin"],
-  shape: _shapesMap["lulu"],
-  alpha: 0.3,
+  shape: { ...shapeDefaults },
+  alpha: 1,
+  // Randomizes shape
+  randomize: true,
 };
 
 class CanvasConfig {
@@ -48,6 +50,7 @@ class CanvasConfig {
     this._configObj = { ...this._configObj, ...configObj };
   }
 
+  // For debugging
   getConfig() {
     return this._configObj;
   }

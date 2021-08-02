@@ -6,10 +6,21 @@ import { ends, scales, steps } from "./shapes/shapes-maps";
 import html2canvas from "html2canvas";
 import { buildAndGetDispatchingArray } from "./utils";
 
+const _azar = (config) => {
+  config.updateConfig({
+    scale: scales[Math.floor(Math.random() * scales.length)],
+    shape: {
+      step: steps[Math.floor(Math.random() * steps.length)],
+      end: ends[Math.floor(Math.random() * ends.length)],
+      tracker: trajectoryMove,
+    },
+  });
+};
 /**
  *
  * @param inputValue
  * @param config
+ * @param canvas
  * @param terminal
  */
 export const handleConfigChange = (inputValue, config, canvas, terminal) => {
@@ -67,14 +78,7 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
         break;
       case "dale-duro":
       case "dd":
-        config.updateConfig({
-          scale: scales[Math.floor(Math.random() * scales.length)],
-          shape: {
-            step: steps[Math.floor(Math.random() * steps.length)],
-            end: ends[Math.floor(Math.random() * ends.length)],
-            tracker: trajectoryMove,
-          },
-        });
+        _azar(config);
         break;
       case "sin-grid":
       case "sg":
@@ -110,6 +114,11 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
         html2canvas(document.querySelector("pre")).then(function (canvas) {
           document.body.appendChild(canvas);
         });
+        break;
+      case "azar":
+        config.updateConfig({ randomize: true });
+        console.log(config.getConfig());
+        break;
     }
   }
 };
@@ -117,20 +126,27 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
 /**
  *
  * @param inputValue
+ * @param config
  * @param canvas
  * @param terminal
  * @param activationFunction
  */
 export const handleKeyPress = (
-  inputValue,
-  canvas,
-  terminal,
-  activationFunction
+    inputValue,
+    config,
+    canvas,
+    terminal,
+    activationFunction
 ) => {
   if (inputValue.length) {
+    // Check for 'randomize' config. If it's true randomize shapes and scales before encrypting.
+    const azar = config.getConfig().randomize;
+    if (azar) {
+      _azar(config);
+    }
     // Write highlighted input text into terminal command history
     terminal.addExecutedCommandToHistory(
-      `<span style="background: white; color: black; font-weight: 900">${inputValue}</span>`
+        `<span style="background: white; color: black; font-weight: 900">${inputValue}</span>`
     );
 
     // Encryption process
@@ -141,13 +157,13 @@ export const handleKeyPress = (
 
     // Write highlighted ciphertext into terminal command history
     terminal.addStringToCommandHistory(
-      `> aes-chipertext: <span style=" font-style: italic">${encrypted}</span>`
+        `> aes-chipertext: <span style=" font-style: italic">${encrypted}</span>`
     );
 
     // Create process text node to be updated with percentage during recursive crawling
     // See above `encryptionSequence` -> `end` callback
     terminal.addStringToCommandHistory(
-      "> creating composition from ciphertext"
+        "> creating composition from ciphertext"
     );
 
     // Build and get crawler data array

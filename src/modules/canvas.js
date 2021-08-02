@@ -19,21 +19,24 @@ const defaults = {
   canvasId: "content",
   container: "body",
   terminalHeight: 150,
-  ...lightMode,
+  ...darkMode,
 };
 
 export class MatrixCanvas {
   constructor(configObj = defaults) {
     this._config = { ...defaults, ...configObj };
+
+    console.log(this._config);
     this._parentElement = document.createElement("pre");
 
     this.rowLength = Math.floor(
-      window.innerWidth / (configObj.cellWidth + configObj.borderWidth * 2)
+      window.innerWidth / (this._config.cellWidth + this._config.borderWidth * 2)
     );
     this.numOfRows = Math.floor(
       (window.innerHeight - this._config.terminalHeight) /
-        (configObj.cellHeight + configObj.borderWidth * 2)
+        (this._config.cellHeight + this._config.borderWidth * 2)
     );
+
     this.cellCount = Math.floor(this.rowLength * this.numOfRows);
   }
 
