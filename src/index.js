@@ -135,16 +135,16 @@ const handleMouseLeave = (e) => {
  */
 const handleClick = (e) => {
     const callback = (e) => {
-        //e.style.background = 'blue';
-        e.classList.add('grow');
-        e.style.borderColor = 'blue'
-        e.style.transform = `translate(${randomNumber(-100, 100)}px, ${randomNumber(-100, 100)}px)`
+        e.style.background = 'blue';
+        //e.classList.add('grow');
+        //e.style.borderColor = 'blue'
+        //e.style.transform = `translate(${randomNumber(-100, 100)}px, ${randomNumber(-100, 100)}px)`
         setTimeout(() => {
             //e.classList.remove('grow')
         }, 550);
     }
     //setInterval(() => {
-    newMove(e.target, null, 200, callback);
+    newMove(e.target, null, 10, callback);
     //}, 200);
 
 };
