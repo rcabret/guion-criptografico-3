@@ -2,11 +2,11 @@
  * Terminal component
  */
 class Terminal {
-  constructor(terminalHeight = 150) {
+  constructor(terminalHeight = 100) {
     this.body = document.querySelector("body");
     this.terminalParent = document.createElement("aside");
     this.terminalParent.id = "terminal";
-    this.terminalName = "cabret$";
+    this.terminalName = "guión$";
     this.terminalParent.style.height = `${terminalHeight}px`;
   }
 

@@ -75,7 +75,6 @@ pre span.active {
   0% {
     transform: translateY(0);
     border-radius: 0;
-    border-color: orangered;
     opacity: 0;
     border-width: 4px;
   }
@@ -85,10 +84,9 @@ pre span.active {
     opacity: 0.4;
   }
   100% {
-    border-width: 1px;
+    border-width: 0.5px;
     border-radius: 10%;
     transform: translateY(0);
-    border-color: grey;
     opacity: 0.8;
   }
 }

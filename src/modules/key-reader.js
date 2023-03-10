@@ -6,7 +6,7 @@ import { ends, scales, steps } from "./shapes/shapes-maps";
 import html2canvas from "html2canvas";
 import { buildAndGetDispatchingArray } from "./utils";
 
-const _azar = (config) => {
+export const _azar = (config) => {
   config.updateConfig({
     scale: scales[Math.floor(Math.random() * scales.length)],
     shape: {

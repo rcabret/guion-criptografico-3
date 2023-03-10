@@ -1,4 +1,4 @@
-import { LinearToVector } from "./utils";
+import { LinearToVector, randomNumber } from "./utils";
 import { _scaleMap } from "./config-service";
 
 const darkMode = {
@@ -12,7 +12,7 @@ const lightMode = {
 };
 
 const defaults = {
-  borderWidth: 1,
+  borderWidth: 0.5,
   cellWidth: 16, // 14 default
   cellHeight: 16, // 14 default
   cellSelector: "cell",
@@ -26,11 +26,11 @@ export class MatrixCanvas {
   constructor(configObj = defaults) {
     this._config = { ...defaults, ...configObj };
 
-    console.log(this._config);
     this._parentElement = document.createElement("pre");
 
     this.rowLength = Math.floor(
-      window.innerWidth / (this._config.cellWidth + this._config.borderWidth * 2)
+      window.innerWidth /
+        (this._config.cellWidth + this._config.borderWidth * 2)
     );
     this.numOfRows = Math.floor(
       (window.innerHeight - this._config.terminalHeight) /
@@ -101,5 +101,18 @@ export class MatrixCanvas {
   toggleBlurLayer(width) {
     const background = document.querySelector(".backdrop");
     background.style.width = `${width}vw`;
+  }
+
+  randomizeBlurLayer() {
+    const w = randomNumber(30, 100);
+    const h = randomNumber(30, 100);
+    const left = randomNumber(0, window.innerWidth / 1.5 - w);
+    const top = randomNumber(0, window.innerHeight / 1.5 - h);
+
+    const background = document.querySelector(".backdrop");
+    background.style.width = `${w}vw`;
+    background.style.height = `${h}vh`;
+    background.style.left = `${left}px`;
+    background.style.top = `${top}px`;
   }
 }
