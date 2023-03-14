@@ -2,7 +2,7 @@
  * Terminal component
  */
 class Terminal {
-  constructor(terminalHeight = 100) {
+  constructor(terminalHeight = 80) {
     this.body = document.querySelector("body");
     this.terminalParent = document.createElement("aside");
     this.terminalParent.id = "terminal";

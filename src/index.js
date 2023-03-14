@@ -104,11 +104,11 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
 const main = async () => {
   document.addEventListener("DOMContentLoaded", () => {
     // Creating canvas matrix and terminal
-    canvas = new MatrixCanvas({ terminalHeight: 150 });
+    canvas = new MatrixCanvas({ terminalHeight: 80 });
     canvas.init();
     rowLength = canvas.getRowLength();
     numOfRows = canvas.getNumOfRows();
-    terminal = new Terminal(150);
+    terminal = new Terminal(80);
     terminal.init();
   });
 };
