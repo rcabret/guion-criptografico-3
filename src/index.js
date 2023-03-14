@@ -66,14 +66,15 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     // Update terminal progress
     terminal.updateLastCommand(
       `> creating composition from ciphertext: ${Math.round(
-        (tracker / cipherChar) * 100
+        (tracker / 23) * 100
       )}%`
     );
 
+    let running = true;
     // Recursion is DONE
-    if (tracker % 20 === 0) {
-      deleteEverythingButMe();
-      canvas.randomizeBlurLayer();
+    if (tracker % 23 === 0 && tracker !== 0) {
+      running = false;
+      tracker = 0;
       terminal.addStringToCommandHistory(`> done creating composition`);
     }
 
@@ -82,14 +83,23 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
       _azar(config);
     }
 
+    if (typeof config.getEnd() === "function") {
+      //config.getEnd()(el, scale, i, alpha);
+    }
+
     // Recursion continues
-    if (true) {
+    if (running) {
       // But draw some stuff if config has something to draw
-      if (typeof config.getEnd() === "function") {
-        config.getEnd()(el, scale, i, alpha);
-      }
       // Recursion point
       encryptionSequence(el, codecArray, cipherChar, tracker + 1);
+    } else {
+      // Stop picture for 10 seconds and reset lock
+      setTimeout(() => {
+        running = true;
+        deleteEverythingButMe();
+        canvas.randomizeBlurLayer();
+        encryptionSequence(el, codecArray, cipherChar, tracker + 1);
+      }, 3000);
     }
   };
 

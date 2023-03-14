@@ -13,12 +13,12 @@ const lightMode = {
 
 const defaults = {
   borderWidth: 0.5,
-  cellWidth: 16, // 14 default
-  cellHeight: 16, // 14 default
+  cellWidth: 14, // 14 default
+  cellHeight: 14, // 14 default
   cellSelector: "cell",
   canvasId: "content",
   container: "body",
-  terminalHeight: 150,
+  terminalHeight: 80,
   ...darkMode,
 };
 
