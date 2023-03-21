@@ -13,7 +13,7 @@ import {
   triangle,
   triangle_sine,
 } from "./shapes";
-import { trajectoryMove } from "../sequences";
+import { sineMove, trajectoryMove } from "../trackers";
 import * as chroma from "chroma-js";
 
 export const ends = [
@@ -30,7 +30,7 @@ export const ends = [
 
 export const steps = [blue, glitch, skin_glitch, paint_shimmer, colorStep];
 
-export const trackers = [trajectoryMove];
+export const trackers = [sineMove, trajectoryMove];
 
 /**
  * TODO: You can use .domain([0,100]); to specify scale range

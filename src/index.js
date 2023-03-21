@@ -43,6 +43,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
       ])
     : element;
 
+  // Run in every tracker function position
   const step = (el, i) => {
     try {
       if (el.hasAttribute("hello")) {
@@ -62,6 +63,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     }
   };
 
+  // Runs on End of entire tracker move
   const onEnd = (el, i) => {
     // Update terminal progress
     terminal.updateLastCommand(
@@ -84,7 +86,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     }
 
     if (typeof config.getEnd() === "function") {
-      //config.getEnd()(el, scale, i, alpha);
+      config.getEnd()(el, scale, i, alpha);
     }
 
     // Recursion continues

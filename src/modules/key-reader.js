@@ -1,10 +1,12 @@
 import { _scaleMap, _shapesMap } from "./config-service";
-import { deleteEverythingButMe, trajectoryMove } from "./sequences";
+import { deleteEverythingButMe } from "./sequences";
+import { trajectoryMove } from "./trackers";
 import Sha256 from "crypto-js/sha256";
 import AES from "crypto-js/aes";
-import { ends, scales, steps } from "./shapes/shapes-maps";
+import { ends, scales, steps, trackers } from "./shapes/shapes-maps";
 import html2canvas from "html2canvas";
 import { buildAndGetDispatchingArray } from "./utils";
+import { blue } from "./shapes/shapes";
 
 export const _azar = (config) => {
   config.updateConfig({
@@ -12,7 +14,7 @@ export const _azar = (config) => {
     shape: {
       step: steps[Math.floor(Math.random() * steps.length)],
       end: ends[Math.floor(Math.random() * ends.length)],
-      tracker: trajectoryMove,
+      tracker: trackers[Math.floor(Math.random() * trackers.length)],
     },
   });
 };
@@ -132,11 +134,11 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
  * @param activationFunction
  */
 export const handleKeyPress = (
-    inputValue,
-    config,
-    canvas,
-    terminal,
-    activationFunction
+  inputValue,
+  config,
+  canvas,
+  terminal,
+  activationFunction
 ) => {
   if (inputValue.length) {
     // Check for 'randomize' config. If it's true randomize shapes and scales before encrypting.
@@ -146,7 +148,7 @@ export const handleKeyPress = (
     }
     // Write highlighted input text into terminal command history
     terminal.addExecutedCommandToHistory(
-        `<span style="background: white; color: black; font-weight: 900">${inputValue}</span>`
+      `<span style="background: white; color: black; font-weight: 900">${inputValue}</span>`
     );
 
     // Encryption process
@@ -157,13 +159,13 @@ export const handleKeyPress = (
 
     // Write highlighted ciphertext into terminal command history
     terminal.addStringToCommandHistory(
-        `> aes-chipertext: <span style=" font-style: italic">${encrypted}</span>`
+      `> aes-chipertext: <span style=" font-style: italic">${encrypted}</span>`
     );
 
     // Create process text node to be updated with percentage during recursive crawling
     // See above `encryptionSequence` -> `end` callback
     terminal.addStringToCommandHistory(
-        "> creating composition from ciphertext"
+      "> creating composition from ciphertext"
     );
 
     // Build and get crawler data array

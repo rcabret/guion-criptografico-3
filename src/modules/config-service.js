@@ -8,9 +8,10 @@ import {
   star_pattern,
   squares,
   dna_star,
-  colorStep, ascii_star,
+  colorStep,
+  ascii_star,
 } from "./shapes/shapes";
-import { trajectoryMove } from "./sequences";
+import { sineMove, trajectoryMove } from "./trackers";
 
 const shapeDefaults = {
   step: colorStep,
@@ -30,7 +31,7 @@ export const _shapesMap = {
   four: { ...shapeDefaults, end: skin_star },
   paint: { ...shapeDefaults, step: paint_shimmer },
   none: { ...shapeDefaults },
-  lulu: { ...shapeDefaults, end: ascii_star}
+  lulu: { ...shapeDefaults, end: ascii_star },
 };
 
 const defaults = {
