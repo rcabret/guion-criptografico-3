@@ -13,8 +13,8 @@ const lightMode = {
 
 const defaults = {
   borderWidth: 0.5,
-  cellWidth: 17, // 14 default
-  cellHeight: 17, // 14 default
+  cellWidth: 16, // 14 default
+  cellHeight: 16, // 14 default
   cellSelector: "cell",
   canvasId: "content",
   container: "body",

@@ -147,7 +147,6 @@ main().then(() => {
       handleKeyPress(value, config, canvas, terminal, encryptionSequence);
     }
   });
-
   // Click event
   document.addEventListener("click", (e) => {
     // Do something
