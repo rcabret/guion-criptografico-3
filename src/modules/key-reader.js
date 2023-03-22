@@ -6,17 +6,17 @@ import AES from "crypto-js/aes";
 import { ends, scales, steps, trackers } from "./shapes/shapes-maps";
 import html2canvas from "html2canvas";
 import { buildAndGetDispatchingArray } from "./utils";
-import { blue } from "./shapes/shapes";
 
 export const _azar = (config) => {
   config.updateConfig({
-    scale: scales[Math.floor(Math.random() * scales.length)],
+    scale: scales[~~(Math.random() * scales.length)],
     shape: {
-      step: steps[Math.floor(Math.random() * steps.length)],
-      end: ends[Math.floor(Math.random() * ends.length)],
-      tracker: trackers[Math.floor(Math.random() * trackers.length)],
+      step: steps[~~(Math.random() * steps.length)],
+      end: ends[~~(Math.random() * ends.length)],
+      tracker: trajectoryMove,
     },
   });
+  console.log("config", config.getConfig());
 };
 /**
  *
@@ -119,7 +119,6 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
         break;
       case "azar":
         config.updateConfig({ randomize: true });
-        console.log(config.getConfig());
         break;
     }
   }

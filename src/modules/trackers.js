@@ -88,7 +88,6 @@ export const sineMove = (
     let [x, y] = vector;
     x = x + 1;
     y = ~~(-100 * Math.sin(0.04 * x));
-    console.log(x, y);
     vector = [x, y];
 
     if (i === loopCount - 1 && onEndCallback) {
