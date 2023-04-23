@@ -1,5 +1,12 @@
 import { LinearToVector, randomNumber } from "./utils";
-import { _scaleMap } from "./config-service";
+import {
+  appContainer,
+  canvasElementId,
+  cellBorder,
+  cellSelector,
+  cellSize,
+  terminalHeight,
+} from "../constants";
 
 const darkMode = {
   background: "black",
@@ -12,13 +19,13 @@ const lightMode = {
 };
 
 const defaults = {
-  borderWidth: 0.5,
-  cellWidth: 16, // 14 default
-  cellHeight: 16, // 14 default
-  cellSelector: "cell",
-  canvasId: "content",
-  container: "body",
-  terminalHeight: 80,
+  borderWidth: cellBorder,
+  cellWidth: cellSize, // 14 default
+  cellHeight: cellSize, // 14 default
+  cellSelector: cellSelector,
+  canvasId: canvasElementId,
+  container: appContainer,
+  terminalHeight: terminalHeight,
   ...darkMode,
 };
 
