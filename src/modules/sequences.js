@@ -1,208 +1,214 @@
 import {
-	getNeighborsByStep,
-	move,
-	getIndex,
-	getRing,
-	getElementViaPosition,
-	getPositionInMatrix,
-	LinearToVector,
-	vectorToLinear,
-	randomNumber,
-} from './utils.js';
+  getIndex,
+  randomNumber,
+  getElementFromVector,
+  getVectorFromElement,
+  getEveryOtherNeighborsByStep,
+  getSquareCoordinates,
+} from "./utils.js";
 
-const loadingString = ['—', '/', '|', '\\',];
+const loadingString = "-/|\\";
 
-/** Element mutations **/
-export const startASCIILoader = (ele, loopCount, time, onEndCallback) => {
-	let i = 1;
-	let counter = 0;
-	const interval = setInterval(() => {
-		counter++;
-		//e.target.innerText = string.charAt(Math.floor(Math.random() * string.length));
-		ele.innerText = loadingString[i];
-		i = getIndex(i, loadingString.length);
-		if (counter > loopCount) {
-			clearInterval(interval);
-			if (onEndCallback) {
-				onEndCallback(ele);
-			}
-		}
-	}, time);
-};
-
-export const startASCIIExplosion = (
-	ele,
-	loopCount,
-	callback,
-	onEndCallback,
-	onStartCallback) => {
-	let counter = 0;
-
-	if (onStartCallback) {
-		onStartCallback(ele);
-	}
-
-	const interval = setInterval(() => {
-		counter++;
-		getNeighborsByStep(ele, counter, loopCount, callback, onEndCallback);
-		if (counter >= loopCount) {
-			clearInterval(interval);
-		}
-	}, 50);
-};
-
-export const drawRing = (
-	ele,
-	step,
-	callback,
+/**
+ *
+ * @param ele
+ * @param loopCount
+ * @param time
+ * @param onEndCallback
+ */
+export const startASCIILoader = (
+  ele,
+  loopCount = 6,
+  time = 20,
+  onEndCallback
 ) => {
-	const coordinates = getRing(ele, step);
+  let i = 1;
+  let counter = 0;
 
-	coordinates.forEach(x => {
-		if (x > 0) {
-			const ele = getElementViaPosition(x);
-			if (!ele) {
-				return;
-			}
-			// Execute every step
-			callback(ele);
-		}
-	});
+  const step = () => {
+    counter++;
+
+    if (ele === undefined) {
+      return;
+    }
+    ele.innerText = loadingString[i];
+    i = getIndex(i, loadingString.length);
+    if (counter > loopCount) {
+      clearInterval(interval);
+      if (onEndCallback) {
+        onEndCallback(ele);
+      }
+    }
+  };
+
+  const interval = setInterval(step, time);
 };
 
-export const expandRing = (ele, startingPoint, loopCount, speed) => {
-	let i = startingPoint;
-	const interval = setInterval(() => {
-		i++;
-		drawRing(ele, i, (e) => {
-			ele.style.color = '#ebc4ca';
-			e.innerText = 'tu';
-		});
-		drawRing(ele, i - 1, (e) => {
-			e.innerText = '';
-		});
-		if (i === startingPoint + loopCount) {
-			clearInterval(interval);
-		}
-	}, speed)
+/**
+ *
+ * @param ele
+ * @param callback
+ * @param onEndCallback
+ * @param loopCount
+ * @param stagger
+ */
+export const startASCIIExplosion = (
+  ele,
+  callback,
+  onEndCallback,
+  loopCount = 5,
+  stagger = 50
+) => {
+  const step = (i) => {
+    const arr = getEveryOtherNeighborsByStep(ele, i);
+
+    // Loop over coordinates
+    arr.forEach((v) => {
+      const ele = getElementFromVector(v);
+
+      // Execute every step
+      callback(ele, i);
+
+      // Execute at the end of all steps
+      if (i >= loopCount - 1 && onEndCallback) {
+        onEndCallback(ele, i);
+      }
+    });
+  };
+
+  for (let i = 0; i < loopCount; i++) {
+    setTimeout(() => {
+      step(i);
+    }, i * stagger);
+  }
 };
 
-export const moveSequence = (ele, loopCount, callback, onEndCallback) => {
-	let count = 0;
-	// random direction
-	const d = Math.floor(Math.random() * 8) + 1;
-	let interval = setInterval(() => {
-		const x = move(ele, d, count);
-		const el = document.getElementById(`id_${x}`);
-		if (el && callback) {
-			callback(el, count);
-		}
-		count++;
-		if (count > loopCount) {
-			clearInterval(interval);
-			if (onEndCallback) {
-				onEndCallback(el);
-			}
-		}
-	}, 50);
-}
+/**
+ *
+ * @param ele
+ * @param step
+ * @param callback
+ */
+export const drawSquareOutline = (ele, step, callback) => {
+  const coordinates = getSquareCoordinates(ele, step);
 
-export const newMove = (ele, trajectory, loopCount, callback, onEndCallback) => {
-	const numPos = getPositionInMatrix(ele);
-	let count = 0;
-	let vector = LinearToVector(numPos);
-	let interval = setInterval(() => {
-		const id = vectorToLinear(vector);
-		const el = document.getElementById(`id_${id}`);
-		if (el && callback) {
-			callback(el, count);
-		}
-		const y = vector[1] - Math.round(Math.random());
-		const x = vector[0] - Math.floor(count * 0.25);
-		vector = [x, y];
-		count++;
-		if (count > loopCount) {
-			clearInterval(interval);
-			if (onEndCallback) {
-				onEndCallback(el);
-			}
-		}
-	}, 50);
-}
-
-let c = 0;
-export const trappedInSquare = (ele) => {
-	//e.target.innerText = loadingString[0];
-	//e.target.classList.add('active');
-
-	let timer;
-	c++;
-	clearTimeout(timer);
-	timer = setTimeout(() => {
-		c = 0;
-	}, 500);
-	if (c > 1 && c < 4) {
-		expandRing(ele, 4, 10, 50);
-		startASCIILoader(ele, 4, 50)
-	}
-	if (c > 5) {
-		expandRing(ele, 1, 10, 50);
-	}
-	ele.style.color = '#4274eb';
-	ele.innerText = 'yo';
-
-	drawRing(ele, 1, (el) => {
-		//ele.style.color = '#ebc4ca';
-		el.innerText = 'tu';
-	});
-
-	drawRing(ele, 2, (el) => {
-		//ele.style.color = '#ebc4ca';
-		el.innerText = 'tu';
-	});
-
-	drawRing(ele, 7, (el) => {
-		//ele.style.color = '#ebc4ca';
-		el.innerText = 'tu';
-	});
-}
-
-/** Entire matrix mutations*/
-export const glitch = (querySelector) => {
-	const all = document.querySelectorAll(querySelector);
-	all.forEach((e, i) => {
-		setTimeout(() => {
-			e.innerHTML = '|';
-			e.style.color = '#edb367';
-			setTimeout(() => {
-				e.style.color = 'violet';
-				e.innerHTML = '-';
-			}, 400);
-			setTimeout(() => {
-				e.innerHTML = ' ';
-			}, 600);
-			setTimeout(() => {
-				e.style.color = '#faf9ac';
-			}, Math.random() * 1000);
-			setTimeout(() => {
-				e.style.color = '#edb367';
-			}, Math.random() * 1000);
-		}, Math.random() * i * 0.1)
-	})
+  coordinates.forEach((v, i) => {
+    if (v.length && i > 0) {
+      const ele = getElementFromVector(v);
+      if (ele && callback) {
+        // Execute every step
+        callback(ele, i);
+      }
+    }
+  });
 };
 
-export const deleteEverythingButMe = (ele, querySelector) => {
-	const all = document.querySelectorAll(querySelector);
-	all.forEach((e, i) => {
-		setTimeout(() => {
-			if (e.id !== ele.id) {
-				e.innerText = '';
-			}
-		}, Math.random() * i * 0.5)
-	})
+/**
+ *
+ * @param querySelector
+ * @param ele
+ */
+export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
+  const all = document.querySelectorAll(querySelector);
+  all.forEach((e, i) => {
+    setTimeout(() => {
+      if (ele === undefined || (ele && e.id !== ele.id)) {
+        e.innerText = "";
+        e.style.background = "none";
+        e.removeAttribute("hello");
+      }
+    }, Math.random() * i * 0.5);
+  });
+};
+/**
+ *
+ * @param x
+ * @returns {*}
+ */
+const defaultRatio = (x) => {
+  return x;
 };
 
-export const moveWithStyle = (ele, hello) => {
+/**
+ *
+ * @param el
+ * @param callback
+ * @param ratio
+ * @param amplitude
+ * @param range
+ * @param tracker
+ * @param stagger
+ */
+export const createGraph = (
+  el,
+  callback,
+  ratio = defaultRatio,
+  amplitude = 0,
+  range = 10,
+  tracker = 0,
+  stagger = 0
+) => {
+  // Make local copies of coordinates
+  const [x, y] = getVectorFromElement(el);
+  if (callback && el) {
+    callback(el, tracker);
+  }
 
+  const mutation = Math.floor(ratio(tracker)) + amplitude;
+  const vector = [x, y];
 
-}
+  for (let j = 0; j < Math.abs(mutation); j++) {
+    // what direction is the coordinate in
+    vector[1] = mutation < 0 ? ++vector[1] : --vector[1];
+    const mutationEle = getElementFromVector(vector);
+    // Step for mutation
+    if (callback && mutationEle) {
+      callback(mutationEle, j);
+    }
+  }
+
+  if (tracker + 1 <= range) {
+    // Move x one to the right
+    const nextEle = getElementFromVector([x + 1, y]);
+    setTimeout(() => {
+      createGraph(nextEle, callback, ratio, amplitude, range, tracker + 1);
+    }, stagger);
+  }
+};
+
+/**
+ *
+ * @param ele
+ * @param radius
+ * @param callback
+ * @param stagger
+ */
+export const createCircle = (ele, radius, callback, stagger = 30) => {
+  let [x, y] = getVectorFromElement(ele);
+
+  // Initial x-coordinate
+  x = x - radius;
+
+  const step = (i) => {
+    const x2 = Math.pow(i - radius, 2);
+    const r2 = Math.pow(radius, 2);
+    const result = Math.abs(r2 - x2);
+    const mutation = Math.round(Math.sqrt(result));
+
+    const vector = [++x, y - mutation];
+
+    for (let i = 0; i < mutation * 2; i++) {
+      vector[1] = ++vector[1];
+      const mutationEle = getElementFromVector(vector);
+      if (callback && mutationEle) {
+        callback(mutationEle, i);
+      }
+    }
+  };
+
+  for (let i = 0; i < radius * 2; i++) {
+    setTimeout(() => {
+      step(i);
+    }, i * stagger);
+  }
+};

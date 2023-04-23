@@ -1,74 +1,165 @@
 * {
-    font-family: "Helvetica Neue", sans-serif !important;
-    margin: 0;
-    padding: 0;
-    font-weight: 200;
-    color: saddlebrown;
-    user-select: none; /* supported by Chrome and Opera */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    cursor: none;
+  /*font-family: "Helvetica Neue", sans-serif !important;*/
+  font-family: "Courier New", monospace;
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+
+.backdrop {
+  backdrop-filter: blur(8px);
+  width: 0;
+  height: calc(100vh);
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  transition: 0.5s ease-in-out;
 }
 
 body {
-    color: #ebc4ca;
-    font-weight: 900;
-    font-size: 10px;
-    background: #030c24;
+  color: #ebc4ca;
+  font-weight: 900;
+  font-size: 10px;
+  cursor: pointer;
+  background: black;
 }
 
-#content {
-    margin-left: auto;
-    margin-right: auto;
-    height: 600px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    position: absolute;
-    z-index: 1;
+pre {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.8rem;
+  font-weight: 500;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: calc(100% - 80px);
+  top: 0;
 }
 
-.cell {
-    font-size: 1.5rem;
-    float: left;
-    /*
-    display: inline-flex;
-    */
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    /*opacity: 0;*/
-    -webkit-transition: opacity .3s;
-    -moz-transition: opacity .3s;
-    -ms-transition: opacity .3s;
-    -o-transition: opacity .3s;
-    transition: opacity .3s;
-    vertical-align: top;
+pre span {
+  font-size: 1rem;
+  display: inline-flex;
+  float: left;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /*opacity: 0;*/
+  -webkit-transition: all 0.1s;
+  -moz-transition: all 0.1s;
+  -ms-transition: all 0.1s;
+  -o-transition: all 0.1s;
+  transition: all 0.1s;
+  vertical-align: top;
+  overflow: hidden;
 }
 
-.cell:hover,
-.cell.active {
-    opacity: 1;
-    background: hotpink;
+pre span:hover,
+pre span.active {
+  opacity: 1;
+  background: hotpink;
 }
 
 .grow {
-    animation: grow 0.5s forwards;
-    opacity: 0.5;
+  animation: grow 1s forwards ease-in;
+}
+
+.scale {
+  animation: scale_up 0.3s forwards ease-in;
 }
 
 @keyframes grow {
-    0% {
-        transform: translateY(0);
-        background: none;
-    }
-    50% {
-        transform: translateY(-200%);
-        background: violet;
-    }
-    100% {
-        transform: translateY(0);
-        background: blue;
-    }
+  0% {
+    transform: translateY(0);
+    border-radius: 0;
+    opacity: 0;
+    border-width: 4px;
+  }
+  50% {
+    transform: translateY(-300%);
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+  100% {
+    border-width: 0.5px;
+    border-radius: 10%;
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+}
+
+@keyframes scale_up {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(0.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#terminal {
+  width: calc(100% - 20px);
+  bottom: 0;
+  background: #2a2828;
+  position: fixed;
+  z-index: 1000;
+  color: white;
+  font-weight: 200;
+  letter-spacing: 1.2px;
+  padding: 10px;
+  font-size: 16px;
+  overflow-y: scroll;
+}
+
+#terminal li {
+  word-wrap: break-word;
+}
+
+#terminal #command-input {
+  outline: none;
+  border: none;
+  background: transparent;
+  color: white;
+  letter-spacing: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  width: calc(100% - 200px);
+}
+
+#login {
+  color: white;
+  font-size: 18px;
+  padding: 20px;
+}
+
+#login form {
+  position: absolute;
+  bottom: 30px;
+}
+
+#login input {
+  outline: none;
+  border: 0.5px solid white;
+  background: transparent;
+  height: 20px;
+  font-size: inherit;
+  color: white;
+  padding: 4px 8px;
+}
+
+#login input[type="submit"] {
+  background: white;
+  color: black;
+  height: 29px;
+  width: 80px;
+  border: 0.5px solid white;
+  padding: 4px;
+  cursor: pointer;
 }
