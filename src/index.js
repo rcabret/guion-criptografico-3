@@ -100,18 +100,13 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
 };
 
 const initApp = () => {
-  console.log("in here");
   const main = async () => {
-    console.log('calling main')
-    //document.addEventListener("DOMContentLoaded", () => {
-      // Creating canvas matrix and terminal
-      canvas = new MatrixCanvas({ terminalHeight: terminalHeight });
-      canvas.init();
-      rowLength = canvas.getRowLength();
-      numOfRows = canvas.getNumOfRows();
-      terminal = new Terminal(terminalHeight);
-      terminal.init();
-    //});
+    canvas = new MatrixCanvas({ terminalHeight: terminalHeight });
+    canvas.init();
+    rowLength = canvas.getRowLength();
+    numOfRows = canvas.getNumOfRows();
+    terminal = new Terminal(terminalHeight);
+    terminal.init();
   };
 
   main().then(() => {

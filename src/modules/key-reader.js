@@ -16,7 +16,6 @@ export const _azar = (config) => {
       tracker: trajectoryMove,
     },
   });
-  console.log("config", config.getConfig());
 };
 /**
  *
