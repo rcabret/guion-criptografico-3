@@ -1,10 +1,8 @@
-import { _scaleMap, _shapesMap } from "./config-service";
 import { deleteEverythingButMe } from "./sequences";
 import { trajectoryMove } from "./trackers";
 import Sha256 from "crypto-js/sha256";
 import AES from "crypto-js/aes";
 import { ends, scales, steps, trackers } from "./shapes/shapes-maps";
-import html2canvas from "html2canvas";
 import { buildAndGetDispatchingArray } from "./utils";
 
 export const _azar = (config) => {
