@@ -15,7 +15,7 @@ import { sineMove, trajectoryMove } from "./trackers";
 
 const shapeDefaults = {
   step: colorStep,
-  tracker: trajectoryMove,
+  tracker: sineMove,
 };
 
 export const _scaleMap = {

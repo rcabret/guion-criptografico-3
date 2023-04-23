@@ -46,41 +46,6 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
           canvas.toggleBlurLayer(configValue);
         }
         break;
-      case "color":
-      case "cr":
-        if (Object.keys(_scaleMap).includes(configValue)) {
-          const configObj = {
-            scale: _scaleMap[configValue],
-          };
-          config.updateConfig(configObj);
-          terminal.addStringToCommandHistory(`> scale update: ${configValue}`);
-        }
-        break;
-      case "forma":
-      case "f":
-        if (Object.keys(_shapesMap).includes(configValue)) {
-          const configObj = {
-            shape: _shapesMap[configValue],
-          };
-          config.updateConfig(configObj);
-          terminal.addStringToCommandHistory(`> shape update: ${configValue}`);
-        }
-        break;
-      case "dale":
-      case "d":
-        config.updateConfig({
-          //scale: scales[Math.floor(Math.random() * scales.length)],
-          shape: {
-            step: steps[Math.floor(Math.random() * steps.length)],
-            end: ends[Math.floor(Math.random() * ends.length)],
-            tracker: trajectoryMove,
-          },
-        });
-        break;
-      case "dale-duro":
-      case "dd":
-        _azar(config);
-        break;
       case "sin-grid":
       case "sg":
         canvas.toggleGrid(true);
@@ -109,15 +74,6 @@ export const handleConfigChange = (inputValue, config, canvas, terminal) => {
         terminal.addExecutedCommandToHistory(inputValue);
         terminal.addStringToCommandHistory("> reset complete");
         canvas.init();
-        break;
-      case "metele":
-      case "m":
-        html2canvas(document.querySelector("pre")).then(function (canvas) {
-          document.body.appendChild(canvas);
-        });
-        break;
-      case "azar":
-        config.updateConfig({ randomize: true });
         break;
     }
   }
