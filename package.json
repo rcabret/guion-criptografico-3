@@ -1,8 +1,8 @@
 {
-  "name": "webpack-babel-boilerplate",
-  "version": "1.0.0",
+  "name": "guion-criptografico",
+  "version": "3.0.0",
   "main": "index.js",
-  "author": "Corey Howell",
+  "author": "Ricardo Cabret",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
