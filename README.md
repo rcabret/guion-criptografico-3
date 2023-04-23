@@ -1,4 +1,4 @@
-# Guion Criptografico 3.0
+# Guion Criptografico 3.0.0
 
 ## Install & Dev Work
 ```
@@ -11,9 +11,5 @@ npm run dev
 npm run build
 ```
 
-## Quick Note
-This boilerplate assumes your app code lives in /src.
-
-/src contains some sample code to show es6 features. 
-
-[Click here for further documentation.](https://medium.com/@coreyhowell/webpack-babel-boilerplate-84f720511b32)
+## Dependencies
+This work uses `crypto.js` and `chroma.js` open source projects.
