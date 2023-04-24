@@ -18,5 +18,5 @@ npm run build
 ```
 
 ## Dependencies
-[Crypto JS](https://github.com/brix/crypto-js)  - MIT License
-[Chroma JS](https://gka.github.io/chroma.js/) - 3-Clause BSD License
+[Crypto JS](https://github.com/brix/crypto-js)  (MIT License) <br>
+[Chroma JS](https://gka.github.io/chroma.js/)  (3-Clause BSD License)
