@@ -4,8 +4,8 @@
 
 ## Info
 ```
-Author: Ricardo Cabret <br>
-Version: 3.0.0 <br>
+Author: Ricardo Cabret 
+Version: 3.0.0 
 Year: 2022
 ```
 
