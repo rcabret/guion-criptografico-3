@@ -9,7 +9,7 @@ Version: 3.0.0
 Year: 2022
 ```
 
-## Install & Dev Work
+## Install & Development
 ```
 npm install
 npm run dev
