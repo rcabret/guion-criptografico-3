@@ -11,6 +11,10 @@
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
+ul {
+  list-style: none;
+}
+
 .backdrop {
   backdrop-filter: blur(8px);
   width: 0;
@@ -162,4 +166,9 @@ pre span.active {
   border: 0.5px solid white;
   padding: 4px;
   cursor: pointer;
+}
+
+#login p {
+  font-size: 14px;
+  max-width: 300px;
 }

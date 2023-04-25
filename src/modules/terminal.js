@@ -12,13 +12,12 @@ class Terminal {
 
   init() {
     this.terminalParent.innerHTML = `
-          <div>
-              <div>Type something to be encrypted</div>
-			        <ul id="command-history"></ul>
-			        <span id="input-line">
-				          ${this.terminalName}  <input autocomplete="off" id="command-input" />
-			        </span>
-		      </div>`;
+      <div>
+		<ul id="command-history"></ul>
+        <span id="input-line">
+	        ${this.terminalName}  <input autocomplete="off" id="command-input" />
+		</span>
+	  </div>`;
 
     this.body.appendChild(this.terminalParent);
     this._getInputElement().focus();
