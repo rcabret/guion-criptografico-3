@@ -9,7 +9,7 @@ async function Login(init) {
           <div id="login">
                 <div id="meta">
 		            Ricardo Cabret <br>
-		            <i>Guión Criptografico 3.0.0</i> (2022)<br><br>
+		            <i>Guión Criptográfico 3.0.0</i> (2022)<br><br>
 		            <p>A web application written in Javascript that encrypts text and renders abstract compositions based on ciphertexts.</p>
                 </div>
                 <form id="form">
