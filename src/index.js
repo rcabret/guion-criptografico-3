@@ -18,6 +18,8 @@ import Login from "./components/Login";
 const config = new CanvasConfig();
 let canvas, terminal, numOfRows, rowLength;
 let runTracker = 1;
+let limit = 23;
+
 const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
   const scale = config.getScale();
   const alpha = parseFloat(config.getAlpha());
@@ -58,15 +60,16 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     // Update terminal progress
     terminal.updateLastCommand(
       `> creating composition from ciphertext: ${Math.round(
-        (tracker / 23) * 100
+        (tracker / limit) * 100
       )}%`
     );
 
     let running = true;
     // Recursion is DONE
-    if (tracker % 19 === 0 && tracker !== 0) {
+    if (tracker % limit === 0 && tracker !== 0) {
       running = false;
       tracker = 0;
+      limit = ~~(randomNumber(2, 23));
       terminal.updateLastCommand(`> done creating composition`);
     }
 
