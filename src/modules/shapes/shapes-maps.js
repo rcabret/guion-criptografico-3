@@ -81,4 +81,5 @@ export const scales = [
   chroma
     .scale(["#bab1ae", "#a0a5ab", "#736063", "#3d6f92", "#2f4660"])
     .mode("hsl"),
+  chroma.scale(["#9e6e56", "#df8d65", "#8d4d39"]),
 ];
