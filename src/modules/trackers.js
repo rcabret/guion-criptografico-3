@@ -19,7 +19,7 @@ export const trajectoryMove = (
   onEndCallback,
   trajectory,
   loopCount = 15,
-  time = 30
+  time = 60
 ) => {
   let mathPre;
   let vector = getVectorFromElement(ele);

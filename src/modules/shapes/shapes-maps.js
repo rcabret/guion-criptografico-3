@@ -11,7 +11,7 @@ import {
   squares_outlines,
   star_pattern,
   triangle,
-  triangle_sine,
+  triangle_sine
 } from "./shapes";
 import { sineMove, trajectoryMove } from "../trackers";
 import * as chroma from "chroma-js";
@@ -22,13 +22,33 @@ export const ends = [
   star_pattern,
   paint_shimmer,
   ascii_star,
-  blue_star_pattern,
   triangle_sine,
   triangle,
-  squares_outlines,
+  squares_outlines
 ];
 
-export const steps = [blue, glitch, skin_glitch, paint_shimmer, colorStep];
+export const steps = [
+  {
+    name: 'blue',
+    func: blue,
+  },
+  {
+    name: 'glitch',
+    func: glitch,
+  },
+  {
+    name: 'skin_glitch',
+    func: skin_glitch,
+  },
+  {
+    name: 'paint_shimmer',
+    func: paint_shimmer,
+  },
+  {
+    name: 'color_step',
+    func: colorStep,
+  }
+];
 
 export const trackers = [sineMove, trajectoryMove];
 
@@ -47,11 +67,12 @@ export const scales = [
     .lightness([0.3, 0.8]),
   chroma.scale("Spectral"),
   chroma.cubehelix().rotations(0.5),
-  chroma.scale(["yellow", "red", "black"]),
-  chroma.scale(["yellow", "navy"]).mode("hsl"),
   chroma.scale(["yellow", "navy"]).mode("lch"),
   chroma.scale(["yellow", "navy"]).mode("lab"),
   chroma.scale("YlGn").gamma(1),
   chroma.scale("RdYlBu").padding(0.3),
   chroma.scale("OrRd").padding([0.2, 0]),
+  chroma.scale(["#efedf5", "#bcbddc", "#756bb1"]).mode("lch"),
+  chroma.scale(["#deb6a7", "#49467f"]).mode("hsl"),
+  chroma.scale(["#9a695a", "#596470", "#76b1f1"]).mode("lch"),
 ];

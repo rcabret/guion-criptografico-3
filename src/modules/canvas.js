@@ -109,17 +109,4 @@ export class MatrixCanvas {
     const background = document.querySelector(".backdrop");
     background.style.width = `${width}vw`;
   }
-
-  randomizeBlurLayer() {
-    const w = randomNumber(30, 100);
-    const h = randomNumber(30, 100);
-    const left = randomNumber(0, window.innerWidth / 1.5 - w);
-    const top = randomNumber(0, window.innerHeight / 1.5 - h);
-
-    const background = document.querySelector(".backdrop");
-    background.style.width = `${w}vw`;
-    background.style.height = `${h}vh`;
-    background.style.left = `${left}px`;
-    background.style.top = `${top}px`;
-  }
 }

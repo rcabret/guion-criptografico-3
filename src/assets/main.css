@@ -9,6 +9,7 @@
   -khtml-user-select: none; /* Konqueror HTML */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
+  overflow: hidden;
 }
 
 ul {
@@ -69,7 +70,7 @@ pre span.active {
 }
 
 .grow {
-  animation: grow 1s forwards ease-in;
+  animation: grow 1s forwards ease-in-out;
 }
 
 .scale {
@@ -80,19 +81,17 @@ pre span.active {
   0% {
     transform: translateY(0);
     border-radius: 0;
-    opacity: 0;
-    border-width: 4px;
+    border-width: 1px;
   }
   50% {
-    transform: translateY(-300%);
+    transform: translateY(-100px);
     border-radius: 50%;
-    opacity: 0.4;
+    border-width: 4px;
   }
   100% {
-    border-width: 0.5px;
-    border-radius: 10%;
+    border-width: 1px;
+    border-radius: 0;
     transform: translateY(0);
-    opacity: 0.8;
   }
 }
 
@@ -119,7 +118,7 @@ pre span.active {
   letter-spacing: 1.2px;
   padding: 10px;
   font-size: 16px;
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 #terminal li {
@@ -150,7 +149,7 @@ pre span.active {
 
 #login input {
   outline: none;
-  border: 0.5px solid white;
+  border: 1px solid white;
   background: transparent;
   height: 20px;
   font-size: inherit;
@@ -163,7 +162,7 @@ pre span.active {
   color: black;
   height: 29px;
   width: 80px;
-  border: 0.5px solid white;
+  border: 1px solid white;
   padding: 4px;
   cursor: pointer;
 }

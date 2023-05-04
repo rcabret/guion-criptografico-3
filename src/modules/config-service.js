@@ -14,7 +14,10 @@ import {
 import { sineMove, trajectoryMove } from "./trackers";
 
 const shapeDefaults = {
-  step: colorStep,
+  step: {
+    name: "color_step",
+    func: colorStep,
+  },
   tracker: sineMove,
 };
 

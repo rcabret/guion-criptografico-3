@@ -79,18 +79,18 @@ export const squares = (ele, scale, i, alpha) => {
       drawSquareOutline(ele, i, (e) => {
         e.style.background = scale(i * 0.05).alpha(alpha);
       });
-    }, i * 20);
+    }, i * 50);
   }
 };
 
 export const squares_outlines = (ele, scale, i, alpha) => {
-  const run = randomNumber(10, 30);
+  const run = randomNumber(5, 20);
   for (let i = 0; i < run; i += 2) {
     setTimeout(() => {
       drawSquareOutline(ele, i, (e) => {
         e.style.background = scale(i * 0.05).alpha(alpha);
       });
-    }, i * 20);
+    }, i * 50);
   }
 };
 
@@ -144,13 +144,17 @@ export const blue = (ele) => {
   ele.style.background = "lightblue";
 };
 
-export const skin_glitch = (el) => {
+export const skin_glitch = (el, moveIndex) => {
   el.style.background = "#F8E2DAFF";
-  el.classList.add("grow");
+  if (moveIndex % 3 === 0) {
+    el.classList.add("grow");
+  }
 };
 
-export const glitch = (el) => {
-  el.classList.add("grow");
+export const glitch = (el, moveIndex) => {
+  if (moveIndex % 3 === 0) {
+    el.classList.add("grow");
+  }
 };
 
 export const paint_shimmer = (el, scale, i, alpha) => {

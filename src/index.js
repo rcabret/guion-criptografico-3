@@ -40,8 +40,15 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
         el.setAttribute("hello", 0);
 
         // Tracker draw
-        if (typeof config.getStep() === "function") {
-          config.getStep()(el, scale, i, alpha);
+        if (typeof config.getStep().func === "function") {
+          console.log("config step", config.getStep().name);
+          const step = config.getStep();
+          if (step.name === "glitch" || step.name === "skin_glitch") {
+            console.log("i", i);
+            step.func(el, i);
+          } else {
+            step.func(el, scale, i, alpha);
+          }
         }
       }
     } catch (e) {
@@ -63,7 +70,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
     if (tracker % 23 === 0 && tracker !== 0) {
       running = false;
       tracker = 0;
-      terminal.addStringToCommandHistory(`> done creating composition`);
+      terminal.updateLastCommand(`> done creating composition`);
     }
 
     if (tracker % 5 === 0) {
@@ -85,7 +92,6 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
       setTimeout(() => {
         running = true;
         deleteEverythingButMe();
-        canvas.randomizeBlurLayer();
         encryptionSequence(el, codecArray, cipherChar, tracker + 1);
       }, 3000);
     }
