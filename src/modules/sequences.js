@@ -117,7 +117,7 @@ export const deleteEverythingButMe = (querySelector = "pre span", ele) => {
         e.style.background = "none";
         e.removeAttribute("hello");
       }
-    }, Math.random() * i * 0.5);
+    }, Math.random() * i * 0.05);
   });
 };
 /**

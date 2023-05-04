@@ -11,7 +11,8 @@ import {
   squares_outlines,
   star_pattern,
   triangle,
-  triangle_sine
+  triangle_sine,
+  nothing,
 } from "./shapes";
 import { sineMove, trajectoryMove } from "../trackers";
 import * as chroma from "chroma-js";
@@ -24,30 +25,31 @@ export const ends = [
   ascii_star,
   triangle_sine,
   triangle,
-  squares_outlines
+  squares_outlines,
+  nothing,
 ];
 
 export const steps = [
   {
-    name: 'blue',
+    name: "blue",
     func: blue,
   },
   {
-    name: 'glitch',
+    name: "glitch",
     func: glitch,
   },
   {
-    name: 'skin_glitch',
+    name: "skin_glitch",
     func: skin_glitch,
   },
   {
-    name: 'paint_shimmer',
+    name: "paint_shimmer",
     func: paint_shimmer,
   },
   {
-    name: 'color_step',
+    name: "color_step",
     func: colorStep,
-  }
+  },
 ];
 
 export const trackers = [sineMove, trajectoryMove];

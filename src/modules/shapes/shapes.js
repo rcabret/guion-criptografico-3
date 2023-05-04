@@ -178,3 +178,7 @@ export const paint_shimmer = (el, scale, i, alpha) => {
 export const colorStep = (el, scale, i, alpha) => {
   el.style.background = scale(i / 20).alpha(alpha);
 };
+
+export const nothing = (el) => {
+  // do nothing!
+};
