@@ -26,7 +26,7 @@ const defaults = {
   canvasId: canvasElementId,
   container: appContainer,
   terminalHeight: terminalHeight,
-  ...darkMode,
+  ...lightMode,
 };
 
 export class MatrixCanvas {

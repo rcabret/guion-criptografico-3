@@ -77,4 +77,8 @@ export const scales = [
   chroma.scale(["#efedf5", "#bcbddc", "#756bb1"]).mode("lch"),
   chroma.scale(["#deb6a7", "#49467f"]).mode("hsl"),
   chroma.scale(["#9a695a", "#596470", "#76b1f1"]).mode("lch"),
+  chroma.scale(["#8e3b42", "#6d4f6d", "#905146", "#4b5764"]).mode("hsl"),
+  chroma
+    .scale(["#bab1ae", "#a0a5ab", "#736063", "#3d6f92", "#2f4660"])
+    .mode("hsl"),
 ];

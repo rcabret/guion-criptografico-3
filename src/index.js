@@ -17,7 +17,7 @@ import Login from "./components/Login";
 
 const config = new CanvasConfig();
 let canvas, terminal, numOfRows, rowLength;
-
+let runTracker = 1;
 const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
   const scale = config.getScale();
   const alpha = parseFloat(config.getAlpha());
@@ -38,13 +38,10 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
         el.setAttribute("hello", newScale);
       } else {
         el.setAttribute("hello", 0);
-
         // Tracker draw
         if (typeof config.getStep().func === "function") {
-          console.log("config step", config.getStep().name);
           const step = config.getStep();
           if (step.name === "glitch" || step.name === "skin_glitch") {
-            console.log("i", i);
             step.func(el, i);
           } else {
             step.func(el, scale, i, alpha);
@@ -67,7 +64,7 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
 
     let running = true;
     // Recursion is DONE
-    if (tracker % 23 === 0 && tracker !== 0) {
+    if (tracker % 19 === 0 && tracker !== 0) {
       running = false;
       tracker = 0;
       terminal.updateLastCommand(`> done creating composition`);
@@ -88,12 +85,24 @@ const encryptionSequence = (element, codecArray, cipherChar, tracker = 0) => {
       // Recursion point
       encryptionSequence(el, codecArray, cipherChar, tracker + 1);
     } else {
-      // Stop picture for 10 seconds and reset lock
+      runTracker++;
+      // Stop picture for 3.5 seconds and reset lock
+
+      const nextCipher =
+        cipherChar.length > 50 ? cipherChar.substring(0, 25) : cipherChar;
+
       setTimeout(() => {
         running = true;
         deleteEverythingButMe();
-        encryptionSequence(el, codecArray, cipherChar, tracker + 1);
-      }, 3000);
+        handleKeyPress(
+          nextCipher,
+          config,
+          canvas,
+          terminal,
+          encryptionSequence
+        );
+        //encryptionSequence(el, codecArray, cipherChar, tracker + 1);
+      }, 3500);
     }
   };
 

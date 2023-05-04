@@ -56,7 +56,12 @@ class Terminal {
 
   updateLastCommand(string) {
     const history = document.getElementById("command-history");
-    history.lastChild.innerHTML = string;
+    if (history.children.length > 8) {
+      history.innerHTML = "";
+      this.addStringToCommandHistory(string);
+    } else {
+      history.lastChild.innerHTML = string;
+    }
   }
 
   toggleInputLine() {

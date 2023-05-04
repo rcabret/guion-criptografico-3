@@ -105,13 +105,13 @@ export const handleKeyPress = (
 
     // Encryption process
     // Hashing password
-    const passPhrase = Sha256("temp_passphrase");
+    const passPhrase = Sha256("un_nuevo_manglar");
     // Encrypting with hashed password
     const encrypted = AES.encrypt(inputValue, passPhrase.toString());
 
     // Write highlighted ciphertext into terminal command history
-    terminal.addStringToCommandHistory(
-      `> aes-chipertext: <span style=" font-style: italic">${encrypted}</span>`
+    terminal.updateLastCommand(
+      `> aes-chipertext: <span style=" font-style: italic">${encrypted.toString()}</span>`
     );
 
     // Create process text node to be updated with percentage during recursive crawling
@@ -125,6 +125,6 @@ export const handleKeyPress = (
     const codecArray = buildAndGetDispatchingArray(encrypted.toString());
 
     // Start encryption crawler recursion
-    activationFunction(undefined, codecArray, inputValue.split(" ").length);
+    activationFunction(undefined, codecArray, encrypted.toString());
   }
 };
